@@ -1,0 +1,24 @@
+Version 1.0 of serializer
+
+----- Text format ------
+Global file header of serialization version number in the format "version: x.y" where "x" is the major version number and "y" is the minor version number and must not include non-numerical characters. 
+version numbers using multiple digits should be treated as whole numbers and not decimals, ie version 1.13 is higher than version 1.2
+any version number with a higher major version number is automatically to be considered as a higher version overall, regardless of minor version, ie version 2.0 is higher than version 1.13
+
+values are stored in key value pairs in the format "key: value" where the key and value are seperated by the special character ":"
+values are to be terminated by the new line with the only exception being the reference of a subobject being serialized which uses a value of "[" to indicate the beginning of a seralized subobject, terminating on a line exclusively containing the "]" marker
+
+asset keys with the exception of special types listed below must be valid variable names according to c++ rules, not including any accessors.
+
+spaces or tabs are to be entirely ignored when being parsed, but should be included by the serializer to seperate text as nessesary
+
+standard values being seralized should not begin with a space or any of "[]{}" characters and must not contain any newline characters
+Collections of values should be formatted the same as subobjects, swapping [] characters for {} respecively. each line thereafter will be a value of the collection directly unless it begins with a } character
+
+The factory key is stored under a special type of asset key with "Asset type" as the key, followed by a string of characters denoting the factory key to recreate the object
+
+-- Preferential standards --
+The below is not a requirment of the parser, but should be included to improve human workflow with the files
+When serializing subobjects, lines should be indented with 4 spaces per subobject branch
+
+----- Binary format -----
