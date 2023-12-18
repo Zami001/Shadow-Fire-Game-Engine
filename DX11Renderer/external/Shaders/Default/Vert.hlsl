@@ -1,10 +1,5 @@
-cbuffer ModelViewProjectionConstantBuffer : register(b0) {
-	matrix mvp;
-};
-
-cbuffer BoneBuffer : register(b1) {
-	matrix Bones[256];
-};
+#include <StandardBuffers.hlsl>
+#include <SkeletalAnimation.hlsl>
 
 struct VS_INPUT {
 	float3 vPos : POSITION;
@@ -25,14 +20,8 @@ VS_OUTPUT main(VS_INPUT input)
 
     float4 pos = float4(input.vPos, 1.0f);
     Output.Color = float4((pos.x * 0.5) + 0.5, (pos.y * 0.5) + 0.5, (pos.z * 0.5) + 0.5, 1);
-    float totalWeight = input.BoneWeight[0] + input.BoneWeight[1] + input.BoneWeight[2] + input.BoneWeight[3];
-    matrix BlendedMatrix =
-						Bones[input.BoneIndex[0]] * input.BoneWeight[0];
-    BlendedMatrix += Bones[input.BoneIndex[1]] * input.BoneWeight[1];
-    BlendedMatrix += Bones[input.BoneIndex[2]] * input.BoneWeight[2];
-    BlendedMatrix += Bones[input.BoneIndex[3]] * input.BoneWeight[3];
-    pos = mul(BlendedMatrix, pos);
-    pos = pos / pos.w;
+    
+    pos = calculateVertexBonePosition(pos, input.BoneIndex, input.BoneWeight);
 	
     pos = mul(mvp, pos);
     Output.Position = pos;

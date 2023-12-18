@@ -29,7 +29,7 @@ bool DX11Shader::CompileShader(const char* str) {
 		strlen(str),
 		NULL,
 		NULL,
-		NULL,
+		&DX11Pipeline::Includer,
 		"main",
 		GetShaderType() == ShaderType::Vertex ? "vs_5_0" : "ps_5_0",
 		D3DCOMPILE_OPTIMIZATION_LEVEL3,

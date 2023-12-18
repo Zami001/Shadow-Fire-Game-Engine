@@ -17,6 +17,8 @@ Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DX11Pipeline::depthStencilState;
 Microsoft::WRL::ComPtr<IWICImagingFactory> DX11Pipeline::ImageFactory;
 Microsoft::WRL::ComPtr<ID3D11SamplerState> DX11Pipeline::SamplerState;
 
+ShaderIncluder DX11Pipeline::Includer;
+
 void DX11Pipeline::Init() {
 	SF_LOG(Render Pipeline, Log, "Initializing DX11 Render Pipeline");
 

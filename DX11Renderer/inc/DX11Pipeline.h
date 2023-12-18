@@ -3,6 +3,7 @@
 #include <DX11Renderer.h>
 #include <RenderPipeline.h>
 #include <MinimalCore.h>
+#include <ShaderIncluder.h>
 #include <wrl.h>
 #include <dxgi1_3.h>
 #include <d3d11_3.h>
@@ -34,9 +35,12 @@ public:
 	static Microsoft::WRL::ComPtr<IWICImagingFactory> ImageFactory;
 	static Microsoft::WRL::ComPtr<ID3D11SamplerState> SamplerState;
 
+	static ShaderIncluder Includer;
+
 private:
 	SFSharedPtr<Material> DefaultMaterial;
 	SFSharedPtr<Material> ErrorMaterial;
+
 
 	void SetupDefaultMaterial();
 	void SetupErrorMaterial();
