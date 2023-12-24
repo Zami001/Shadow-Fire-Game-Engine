@@ -80,8 +80,9 @@ public:
 		SF_ASSERT(AllowNull, "Cannot use default constructor on smart pointers that do not allow null");
 	}
 
-	template<bool StrongLinkOther, bool AllowNullOther>
-	SFObjectLink(const SFObjectLink<T, Threadsafe, StrongLinkOther, AllowNullOther>& other) {
+	template<typename OtherT, bool StrongLinkOther, bool AllowNullOther>
+	requires(std::derived_from<OtherT, T> || std::same_as<T, OtherT>)
+	SFObjectLink(const SFObjectLink<OtherT, Threadsafe, StrongLinkOther, AllowNullOther>& other) {
 		AssignContainer(other.Container);
 	}
 
@@ -232,7 +233,7 @@ public:
 		return *this;
 	}
 
-	ThisType& operator=(SFObjectLink&& other) {
+	ThisType& operator=(SFObjectLink&& other) noexcept {
 		if (Container == other.Container) {
 			return *this;
 		}

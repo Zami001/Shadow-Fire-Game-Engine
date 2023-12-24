@@ -256,6 +256,10 @@ SFSharedRef<Mesh> DX11Pipeline::CreateMesh() {
 	return SFSharedRef<Mesh>(new DX11Mesh());
 }
 
+SFSharedRef<Material> DX11Pipeline::CreateMaterial() {
+	return new DX11Material();
+}
+
 SFSharedRef<Material> DX11Pipeline::GetDefaultMaterial() const {
 	return DefaultMaterial;
 }
@@ -286,22 +290,10 @@ SFSharedRef<Texture2D> DX11Pipeline::CreateTexture2D() {
 
 void DX11Pipeline::SetupDefaultMaterial() {
 	DefaultMaterial = new DX11Material();
-	SFSharedRef<Shader> vert = CreateShader(ShaderType::Vertex);
-	SFSharedRef<Shader> frag = CreateShader(ShaderType::Fragment);
-	ShaderImporter importer;
-	importer.ImportFile("Shaders/Default/Vert.hlsl", *vert);
-	importer.ImportFile("Shaders/Default/Frag.hlsl", *frag);
-
-	DefaultMaterial->BindShaders({ vert, frag });
+	DefaultMaterial->BindShaders({ GetShader("Shaders/Default/Vert.hlsl", ShaderType::Vertex), GetShader("Shaders/Default/Frag.hlsl", ShaderType::Fragment) });
 }
 
 void DX11Pipeline::SetupErrorMaterial() {
 	ErrorMaterial = new DX11Material();
-	SFSharedRef<Shader> vert = CreateShader(ShaderType::Vertex);
-	SFSharedRef<Shader> frag = CreateShader(ShaderType::Fragment);
-	ShaderImporter importer;
-	importer.ImportFile("Shaders/Error/Vert.hlsl", *vert);
-	importer.ImportFile("Shaders/Error/Frag.hlsl", *frag);
-
-	ErrorMaterial->BindShaders({ vert, frag });
+	ErrorMaterial->BindShaders({ GetShader("Shaders/Error/Vert.hlsl", ShaderType::Vertex), GetShader("Shaders/Error/Frag.hlsl", ShaderType::Fragment) });
 }

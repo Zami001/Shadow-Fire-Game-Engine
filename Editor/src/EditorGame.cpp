@@ -10,6 +10,7 @@
 #include <Math/Constants.h>
 #include <Math/Quaternion.h>
 #include <Profiling/ScopedProfiler.h>
+#include <Components/UIComponent.h>
 
 void EditorGame::Initialize() {
 	Game::Initialize();
@@ -49,6 +50,7 @@ void EditorGame::CreateInitialScene() {
 	SFSharedPtr<GameObject> obj = scene->SpawnGameObject();
 
 	auto meshcomp = obj->AddComponent<SkeletalMeshComponent>();
+	obj->AddComponent<UIComponent>();
 
 	SFSharedPtr<Mesh> debugMesh = GetGameInstance()->GetRenderer().CreateMesh();
 	SFSharedPtr<Material> mat = GetGameInstance()->GetRenderer().GetDefaultMaterial();

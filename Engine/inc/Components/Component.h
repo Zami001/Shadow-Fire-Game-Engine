@@ -7,6 +7,8 @@ class GameObject;
 class Scene;
 
 class ENGINE_API Component : public SFObject {
+	friend GameObject;
+
 public:
 	Component();
 	~Component();

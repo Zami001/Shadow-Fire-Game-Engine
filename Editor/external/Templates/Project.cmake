@@ -14,7 +14,7 @@ set( SF_PROJECT_NAME
 
 project ( "${SF_PROJECT_NAME}" LANGUAGES CXX VERSION 0.1 )
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
@@ -53,7 +53,7 @@ target_include_directories( ${SF_TARGET_NAME}
 )
 
 target_link_libraries ( ${SF_TARGET_NAME} 
-	PUBLIC OpenGLRenderer
+	PUBLIC DX11Renderer
 	PUBLIC Engine
 )
 

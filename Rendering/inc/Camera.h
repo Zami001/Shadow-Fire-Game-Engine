@@ -36,6 +36,7 @@ public:
 	inline CameraType GetCameraType() const { return Type; }
 	inline float GetNearPlane() const { return NearPlane; }
 	inline float GetFarPlane() const { return FarPlane; }
+	inline float GetAspectRatio() const { return Aspect; }
 	inline const Matrix4x4& GetProjectionMatrix() const { return ProjectionMatrix; }
 	
 	inline float GetFOV() const { 
@@ -51,8 +52,10 @@ public:
 	void SetCameraType(CameraType Type);
 	void SetNearPlane(float NearPlane);
 	void SetFarPlane(float FarPlane);
+	void SetAspectRatio(float AspectRatio);
 
 private:
 	void CreateOrthographicProjection();
 	void CreatePerspectiveProjection();
+	void UpdateProjectionMatrix();
 };

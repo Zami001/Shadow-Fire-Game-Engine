@@ -33,7 +33,9 @@ public:
 	template<typename T, typename... Args>
 	std::enable_if_t<!std::is_base_of_v<SceneComponent, T> && std::is_base_of_v<Component, T>, SFSharedRef<T>> AddComponent(Args... args) {
 		SFSharedRef<T> newComponent = ConstructObject<T, Args...>(args...);
-		Components.push_back(newComponent);
+		SFSharedRef<Component> asComp = newComponent;
+		Components.push_back(asComp);
+		newComponent->AttachedTo = this;
 		newComponent->FinishConstruction();
 		return newComponent;
 	}
@@ -41,6 +43,7 @@ public:
 	template<typename T, typename... Args>
 	std::enable_if_t<std::is_base_of_v<SceneComponent, T>, SFSharedRef<T>> AddComponent(Args... args) {
 		SFSharedRef<T> newComponent = ConstructObject<T, Args...>(args...);
+		newComponent->AttachedTo = this;
 
 		if (RootComponent.Get()) {
 			newComponent->SetParent(RootComponent.Get());

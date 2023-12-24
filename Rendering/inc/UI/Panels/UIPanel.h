@@ -13,6 +13,7 @@ public:
 
 protected:
 	std::vector<SFSharedRef<UIElement>> Subelements;
+	virtual void ParentUpdated() override;
 
 public:
 	template<typename T>
@@ -20,9 +21,15 @@ public:
 		SFSharedRef<UIElement> element = new T();
 
 		element->Parent = this;
+		element->ParentRoot = GetRoot();
 
 		Subelements.push_back(element);
+
+		element->Initialize();
+		return element;
 	}
 
 	void RemoveElement(SFSharedPtr<UIElement> Element);
+
+	virtual void MarkDirty() override;
 };

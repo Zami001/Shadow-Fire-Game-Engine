@@ -47,19 +47,19 @@ Window::~Window() {
 	Windows.erase(handle);
 }
 
-int Window::GetWidth() {
+int Window::GetWidth() const {
 	return Size.x;
 }
 
-int Window::GetHeight() {
+int Window::GetHeight() const {
 	return Size.y;
 }
 
-bool Window::GetShouldClose() {
+bool Window::GetShouldClose() const {
 	return Closing;
 }
 
-Vector2i Window::GetSize() {
+Vector2i Window::GetSize() const {
 	return Size;
 }
 

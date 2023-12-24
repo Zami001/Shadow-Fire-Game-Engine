@@ -188,7 +188,7 @@ void DX11Texture2D::LoadFile(std::filesystem::path FilePath) {
 				format = WICToDXGI(g_WICConvert[i].target);
 				
 				if (format == DXGI_FORMAT_UNKNOWN) {
-					throw std::exception("BRUH! still unknown");
+					throw std::exception("Unknown texture format during import");
 				} else {
 					SF_LOG(Mesh Import, Log, "Texture format: %i", format)
 				}
@@ -197,8 +197,6 @@ void DX11Texture2D::LoadFile(std::filesystem::path FilePath) {
 				break;
 			}
 		}
-
-		SF_LOG(Texture Import, Warning, "Loading unknown texture format")
 	} else {
 		formatConverted = false;
 		bitsPerPixel = WICBitsPerPixel(pixelFormat);

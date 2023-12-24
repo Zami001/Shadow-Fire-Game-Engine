@@ -1,5 +1,4 @@
-#include <StandardBuffers.hlsl>
-#include <SkeletalAnimation.hlsl>
+#include <SkeletalMesh.hlsl>
 
 struct VS_INPUT {
 	float3 vPos : POSITION;

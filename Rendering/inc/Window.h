@@ -33,10 +33,10 @@ public:
 	Window(const WindowParams& params);
 	virtual ~Window();
 
-	virtual int GetWidth();
-	virtual int GetHeight();
-	virtual bool GetShouldClose();
-	virtual Vector2i GetSize();
+	virtual int GetWidth() const;
+	virtual int GetHeight() const;
+	virtual bool GetShouldClose() const;
+	virtual Vector2i GetSize() const;
 	virtual void ProcessEvents();
 	virtual void Present();
 	virtual RenderTarget& GetRenderTarget();

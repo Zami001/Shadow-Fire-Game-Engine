@@ -1,5 +1,3 @@
-#include <Test.hlsl>
-
 #ifndef _STANDARDBUFFERS
 #define _STANDARDBUFFERS
 

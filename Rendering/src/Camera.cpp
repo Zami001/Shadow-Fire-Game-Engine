@@ -5,6 +5,26 @@ Camera::Camera() : FieldOfView(60.f) {
 	CreatePerspectiveProjection();
 }
 
+void Camera::SetCameraType(CameraType Type) {
+	this->Type = Type;
+	UpdateProjectionMatrix();
+}
+
+void Camera::SetNearPlane(float NearPlane) {
+	this->NearPlane = NearPlane;
+	UpdateProjectionMatrix();
+}
+
+void Camera::SetFarPlane(float FarPlane) {
+	this->FarPlane = FarPlane;
+	UpdateProjectionMatrix();
+}
+
+void Camera::SetAspectRatio(float AspectRatio) {
+	Aspect = AspectRatio;
+	UpdateProjectionMatrix();
+}
+
 void Camera::CreateOrthographicProjection() {
 }
 
@@ -22,4 +42,19 @@ void Camera::CreatePerspectiveProjection() {
 		0,				0,				fRange,					1.f,
 		0,				0,				-fRange * NearPlane,	0
 	};
+}
+
+void Camera::UpdateProjectionMatrix() {
+	switch (Type) {
+		case CameraType::Perspective:
+			CreatePerspectiveProjection();
+			break;
+
+		case CameraType::Orthographic:
+			CreateOrthographicProjection();
+			break;
+
+		default:
+			SF_ASSERT(0, "Camera has an undefined type")
+	}
 }

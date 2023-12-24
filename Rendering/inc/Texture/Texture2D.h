@@ -2,6 +2,7 @@
 
 #include <Rendering.h>
 #include <filesystem>
+#include <MinimalCore.h>
 
 class RENDERING_API Texture2D {
 public:
@@ -15,6 +16,7 @@ protected:
 public:
 	inline int GetWidth() const { return Width; }
 	inline int GetHeight() const { return Height; }
+	inline Vector2i GetSize() const { return { Width, Height }; }
 
 	virtual void LoadFile(std::filesystem::path FilePath) = 0;
 };
