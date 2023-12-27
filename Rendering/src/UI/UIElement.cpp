@@ -95,61 +95,17 @@ void UIElement::SetSlicedBoxRender(Bounds2Di ScreenPos, Vector2i ScreenSize, Sli
 
 	Buffer.SetVertexData(verts, 16);
 
-	VertexBuffer::IndexType* indices = new VertexBuffer::IndexType[54];
-	indices[0] = 0;
-	indices[1] = 8;
-	indices[2] = 4;
-	indices[3] = 0;
-	indices[4] = 4;
-	indices[5] = 15;
-	indices[6] = 8;
-	indices[7] = 9;
-	indices[8] = 5;
-	indices[9] = 5;
-	indices[10] = 4;
-	indices[11] = 8;
-	indices[12] = 1;
-	indices[13] = 5;
-	indices[14] = 9;
-	indices[15] = 5;
-	indices[16] = 1;
-	indices[17] = 10;
-	indices[18] = 10;
-	indices[19] = 6;
-	indices[20] = 5;
-	indices[21] = 6;
-	indices[22] = 10;
-	indices[23] = 11;
-	indices[24] = 11;
-	indices[25] = 2;
-	indices[26] = 6;
-	indices[27] = 6;
-	indices[28] = 2;
-	indices[29] = 12;
-	indices[30] = 6;
-	indices[31] = 12;
-	indices[32] = 13;
-	indices[33] = 13;
-	indices[34] = 7;
-	indices[35] = 6;
-	indices[36] = 7;
-	indices[37] = 13;
-	indices[38] = 3;
-	indices[39] = 7;
-	indices[40] = 3;
-	indices[41] = 14;
-	indices[42] = 7;
-	indices[43] = 14;
-	indices[44] = 15;
-	indices[45] = 7;
-	indices[46] = 15;
-	indices[47] = 4;
-	indices[48] = 4;
-	indices[49] = 5;
-	indices[50] = 6;
-	indices[51] = 7;
-	indices[52] = 4;
-	indices[53] = 6;
+	VertexBuffer::IndexType* indices = new VertexBuffer::IndexType[54]{ 
+		0, 8, 4, 0, 4, 15, // top-left corner
+		8, 9, 5, 5, 4, 8, // top line
+		1, 5, 9, 5, 1, 10, // top right corner
+		10, 6, 5, 6, 10, 11, // right line
+		11, 2, 6, 6, 2, 12, // bottom right corner
+		6, 12, 13, 13, 7, 6, // bottom line
+		7, 13, 3, 7, 3, 14, // bottom left corner
+		7, 14, 15, 7, 15, 4, // left line
+		4, 5, 6, 7, 4, 6 // inner area
+	};
 
 	Buffer.SetIndices(indices, 54);
 
