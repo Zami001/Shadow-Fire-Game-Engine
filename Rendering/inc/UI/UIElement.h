@@ -14,13 +14,19 @@ public:
 	friend UIPanel;
 	friend UIRoot;
 
+	struct SlicedUI {
+		int Left = 0;
+		int Top = 0;
+		int Right = 0;
+		int Bottom = 0;
+	};
+
 	UIElement() = default;
 	virtual ~UIElement() = default;
 
-	SFSharedPtr<Material> material;
-
 protected:
 	SFSharedPtr<Mesh> mesh;
+	SFSharedPtr<Material> material;
 
 	bool VisualElement = false;
 	virtual void Render(Bounds2Di Bounds, Vector2i Screensize) = 0;
@@ -28,6 +34,8 @@ protected:
 	virtual void Initialize() {};
 
 	static Vector3 ScreenPosToScreenSpace(Vector2i position, Vector2i ScreenSize);
+	static void SetBoxRender(Bounds2Di ScreenPos, Vector2i ScreenSize, Vector2 UVFrom, Vector2 UVTo, VertexBuffer& Buffer);
+	static void SetSlicedBoxRender(Bounds2Di ScreenPos, Vector2i ScreenSize, SlicedUI Slices, Vector2i OriginalSize, VertexBuffer& Buffer);
 
 private:
 	UIPanel* Parent = nullptr;

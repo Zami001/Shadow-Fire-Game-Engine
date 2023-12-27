@@ -9,13 +9,7 @@ UIImage::UIImage() {
 UIImage::~UIImage() {}
 
 void UIImage::Render(Bounds2Di Bounds, Vector2i Screensize) {
-	struct Vertex {
-		Vector3 position;
-		Vector2 UV;
-	};
-
 	if (IsDirty()) {
-		Vertex* verts = new Vertex[4];
 		Bounds2Di UsedBounds = Bounds;
 
 		switch(Scale) {
@@ -31,59 +25,35 @@ void UIImage::Render(Bounds2Di Bounds, Vector2i Screensize) {
 
 			[[fallthrough]];
 			case ScaleMode::Stretch:
-				for (int i = 0; i < 4; ++i) {
-					verts[i].UV.x = static_cast<float>(i % 2);
-					verts[i].UV.y = static_cast<float>(i / 2);
-					int x, y;
-					x = (i % 2) ? (UsedBounds.position.x + UsedBounds.size.x) : UsedBounds.position.x;
-					y = (i / 2) ? UsedBounds.position.y : (UsedBounds.position.y + UsedBounds.size.y);
-					verts[i].position = ScreenPosToScreenSpace(Vector2i(x, y), Screensize);
-				}
+				SetBoxRender(UsedBounds, Screensize, { 0.f, 0.f }, { 1.f, 1.f }, mesh->GetVertexBuffer());
 				break;
 
 			case ScaleMode::Crop: {
 				Vector2i ImageSize = material->Textures[0]->GetSize();
 
-				for (int i = 0; i < 4; ++i) {
-					verts[i].UV.x = std::min(static_cast<float>(i % 2), static_cast<float>(UsedBounds.size.x) / static_cast<float>(ImageSize.x));
-					verts[i].UV.y = std::min(static_cast<float>(i / 2), static_cast<float>(UsedBounds.size.y) / static_cast<float>(ImageSize.y));
-					int x, y;
-					x = (i % 2) ? std::min(UsedBounds.position.x + UsedBounds.size.x, ImageSize.x) : UsedBounds.position.x;
-					y = (i / 2) ? UsedBounds.position.y : std::min(UsedBounds.position.y + UsedBounds.size.y, ImageSize.y);
-					verts[i].position = ScreenPosToScreenSpace(Vector2i(x, y), Screensize);
-				}
+				UsedBounds.size.x = std::min(ImageSize.x, UsedBounds.size.x);
+				UsedBounds.size.y = std::min(ImageSize.y, UsedBounds.size.y);
+				Vector2 ToUV = { static_cast<float>(UsedBounds.size.x) / static_cast<float>(ImageSize.x), static_cast<float>(UsedBounds.size.y) / static_cast<float>(ImageSize.y) };
+				SetBoxRender(UsedBounds, Screensize, { 0.f, 0.f }, ToUV, mesh->GetVertexBuffer());
+				break;
+			}
+			
+			case ScaleMode::Repeat: {
+				// need to offset UV coords so that image tiles from top-left since standard UI arranges from top-left instead of bottom left
+				Vector2i ImageSize = material->Textures[0]->GetSize();
+				float xRepeats = static_cast<float>(UsedBounds.size.x) / static_cast<float>(ImageSize.x);
+				float yRepeats = static_cast<float>(UsedBounds.size.y) / static_cast<float>(ImageSize.y);
+				float xRemainder = std::fmodf(xRepeats, 1.f);
+				float yRemainder = std::fmodf(yRepeats, 1.f);
+				SetBoxRender(UsedBounds, Screensize, { -xRemainder, -yRemainder }, { xRepeats - xRemainder, yRepeats - yRemainder }, mesh->GetVertexBuffer());
 				break;
 			}
 
-			case ScaleMode::Repeat: {
-				Vector2i ImageSize = material->Textures[0]->GetSize();
-
-				for (int i = 0; i < 4; ++i) {
-					verts[i].UV.x = static_cast<float>(i % 2) * (UsedBounds.size.x / ImageSize.x);
-					verts[i].UV.y = static_cast<float>(i / 2) * (UsedBounds.size.y / ImageSize.y);
-					int x, y;
-					x = (i % 2) ? (UsedBounds.position.x + UsedBounds.size.x) : UsedBounds.position.x;
-					y = (i / 2) ? UsedBounds.position.y : (UsedBounds.position.y + UsedBounds.size.y);
-					verts[i].position = ScreenPosToScreenSpace(Vector2i(x, y), Screensize);
-				}
-				break;
+			case ScaleMode::Sliced: {
+				SetSlicedBoxRender(UsedBounds, Screensize, Slices, material->Textures[0]->GetSize(), mesh->GetVertexBuffer());
+				break; 
 			}
 		}
-
-		mesh->GetVertexBuffer().SetVertexData(verts, 4);
-
-		VertexBuffer::IndexType* indices = new VertexBuffer::IndexType[6];
-		indices[0] = 2;
-		indices[1] = 1;
-		indices[2] = 0;
-		indices[3] = 1;
-		indices[4] = 2;
-		indices[5] = 3;
-	
-		mesh->GetVertexBuffer().SetIndices(indices, 6);
-
-		delete[] verts;
-		delete[] indices;
 
 		ClearDirty();
 	}

@@ -13,7 +13,8 @@ public:
 		Stretch,
 		MaintainAspect,
 		Crop,
-		Repeat
+		Repeat,
+		Sliced
 	};
 
 	void SetTexture(SFSharedPtr<Texture2D> Texture);
@@ -28,5 +29,7 @@ protected:
 	virtual Vector2i GetDesiredSize() const override;
 
 private:
-	ScaleMode Scale = Crop;
+	ScaleMode Scale = Sliced;
+
+	SlicedUI Slices = { 600, 150, 600, 150 };
 };
