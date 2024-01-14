@@ -25,9 +25,12 @@ public:
 
 	virtual void CreateInitialScene();
 
+	std::vector<SFSharedPtr<Window>> GetWindows();
+
 private:
 	TickManager tickManager;
 	std::vector<SFSharedRef<Scene>> Scenes;
+	std::vector<SFSharedPtr<Window>> Windows;
 
 public:
 	inline TickManager& GetTickManager() {

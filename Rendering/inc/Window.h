@@ -6,6 +6,7 @@
 #include <Input/InputManager.h>
 #include <unordered_map>
 #include <string>
+#include <WindowInput.h>
 
 #ifdef _WIN32
 #include <Platform/Windows/PreWindowsInclude.h>
@@ -40,7 +41,8 @@ public:
 	virtual void ProcessEvents();
 	virtual void Present();
 	virtual RenderTarget& GetRenderTarget();
-	virtual InputManager& GetInputManager();
+
+	InputManager& GetInputManager();
 
 #ifdef _WIN32
 	HWND GetHandle() const;
@@ -55,7 +57,7 @@ private:
 	static std::unordered_map<HWND, Window*> Windows;
 
 	RenderTarget* target;
-	InputManager* manager;
+	WindowInput input;
 
 	Vector2i Size;
 	std::string Title;
@@ -67,4 +69,5 @@ private:
 #endif
 
 	static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	static Keycode TranslateKeycode(WPARAM wParam, LPARAM lParam);
 };

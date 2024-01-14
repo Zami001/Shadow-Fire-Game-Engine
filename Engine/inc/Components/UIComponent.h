@@ -14,4 +14,10 @@ protected:
 
 private:
 	SFSharedPtr<UIRoot> UI;
+
+	void OnMouseMove(Vector2i MousePos);
+	void OnKeyEvent(Keycode key, ButtonState state);
+
+	InputManager::Handle mouseHandle;
+	InputManager::Handle buttonHandle;
 };

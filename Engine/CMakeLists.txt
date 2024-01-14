@@ -6,7 +6,7 @@ set(SRC_FILES
 
 set( HEADER_FILES 
 	"inc/Engine.h"
- "inc/Application.h" "inc/Game.h"  "inc/Scene.h" "inc/GameObject.h" "inc/Components/SceneComponent.h" "inc/Components/Component.h" "inc/Components/StaticMeshComponent.h"  "inc/TickManager.h" "inc/Assets/AssetType.h" "inc/Assets/AssetFactory.h" "inc/SFObject.h"  "inc/StreamBuffers/StreamBuffer.h" "inc/StreamBuffers/FileBuffer.h"  "inc/Assets/SerializedAsset.h" "inc/SFGUID.h" "inc/Assets/AssetCache.h"  "inc/Logging/ConsoleLogger.h" "inc/Components/SkeletalMeshComponent.h" "inc/Components/MeshComponent.h"  "inc/Components/UIComponent.h")
+ "inc/Application.h" "inc/Game.h"  "inc/Scene.h" "inc/GameObject.h" "inc/Components/SceneComponent.h" "inc/Components/Component.h" "inc/Components/StaticMeshComponent.h"  "inc/TickManager.h" "inc/Assets/AssetType.h" "inc/Assets/AssetFactory.h" "inc/SFObject.h"  "inc/StreamBuffers/StreamBuffer.h" "inc/StreamBuffers/FileBuffer.h"  "inc/Assets/SerializedAsset.h" "inc/SFGUID.h" "inc/Assets/AssetCache.h"  "inc/Logging/ConsoleLogger.h" "inc/Components/SkeletalMeshComponent.h" "inc/Components/MeshComponent.h"  "inc/Components/UIComponent.h" )
 
 # Add source to this project's executable.
 add_library ( Engine ${HEADER_FILES} ${SRC_FILES} )

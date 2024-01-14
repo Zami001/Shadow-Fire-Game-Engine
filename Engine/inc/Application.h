@@ -21,13 +21,11 @@ public:
 	/// @brief Called to shut down the entire application cleanly
 	static void Shutdown();
 
-	/// @brief Called when all threads are closed and the engine is ready to terminate
+	/// @brief Only to be called from main(). Called when all threads are closed and the engine is ready to terminate
 	static void Terminate();
 
 	static bool ContainsLaunchOption(const char* Option, char**& OutParameters, int& OutParameterCount);
 	static const std::vector<char*>& GetLaunchOptions();
-
-	static const std::vector<SFSharedPtr<Window>>& GetWindows();
 
 	static std::filesystem::path GetApplicationPath();
 
@@ -36,11 +34,11 @@ public:
 private:
 	bool Running = true;
 	std::vector<char*> LaunchParameters;
-	std::vector<SFSharedPtr<Window>> Windows;
 
 	std::filesystem::path ApplicationPath;
 
 	Game* ActiveGame = nullptr;
 
 	void ExtractLaunchParameters(int argc, char** argv);
+
 };

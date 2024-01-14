@@ -22,6 +22,9 @@ public:
 		Scale = mode;
 		MarkDirty();
 	}
+	
+	virtual void OnMouseOver() override;
+	virtual bool RequiresInput() const override { return true; }
 
 protected:
 	virtual void Render(Bounds2Di Bounds, Vector2i Screensize) override;

@@ -12,6 +12,15 @@ struct Bounds {
 
 	Vector<T, Dimensions> position;
 	Vector<T, Dimensions> size;
+
+	inline bool Contains(Vector<T, Dimensions> Point) const {
+		for (int i = 0; i < Dimensions; ++i) {
+			if (Point.v[i] < position.v[i]) return false;
+			if (Point.v[i] > (position.v[i] + size.v[i])) return false;
+		}
+
+		return true;
+	}
 };
 
 typedef Bounds<int, 2> Bounds2Di;

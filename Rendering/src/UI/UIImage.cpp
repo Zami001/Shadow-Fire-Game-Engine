@@ -83,3 +83,9 @@ void UIImage::Initialize() {
 Vector2i UIImage::GetDesiredSize() const {
 	return material->Textures[0]->GetSize();
 }
+
+void UIImage::OnMouseOver() {
+	UIElement::OnMouseOver();
+
+	SF_LOG(LogTest, Log, "Mouse over event")
+}

@@ -4,7 +4,8 @@
 #include <string>
 
 enum class LogSeverity : unsigned char {
-	Trace,
+	VeryVerbose,
+	Verbose,
 	Profiling,
 	Log,
 	Warning,

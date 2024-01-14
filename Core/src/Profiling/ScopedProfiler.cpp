@@ -24,5 +24,5 @@ void ScopedProfiler::End() {
 
 void ScopedProfiler::Print() {
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
-	SF_LOG(Scoped Profiling, Profiling, "%s took %i microseconds", taskname, duration.count())
+	SF_LOG(LogScopedProfiling, Profiling, "%s took %i microseconds", taskname, duration.count())
 }

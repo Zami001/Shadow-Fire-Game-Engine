@@ -16,6 +16,11 @@ protected:
 	virtual void ParentUpdated() override;
 
 public:
+	virtual bool RequiresInput() const override { return true; }
+	virtual void OnMouseMove(Vector2i MousePos) override;
+	virtual UIEventResponse OnMouseClick() override;
+	virtual UIEventResponse OnKeyEvent(Keycode key, ButtonState state) override;
+
 	template<typename T>
 	inline std::enable_if_t<std::is_base_of_v<UIElement, T>, SFSharedRef<UIElement>> AddElement() {
 		SFSharedRef<UIElement> element = new T();

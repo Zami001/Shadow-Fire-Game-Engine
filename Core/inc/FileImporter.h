@@ -67,9 +67,9 @@ public:
 		bool result = false;
 		if (file) {
 			if ((result = ConvertData(Output, data, totalLength))) {
-				SF_LOG(File Import, Log, "File imported successfully - %s", FilePath.string().c_str())
+				SF_LOG(LogFileImport, Verbose, "File imported successfully - %s", FilePath.string().c_str())
 			} else {
-				SF_LOG(File Import, Error, "File import failed - %s", FilePath.string().c_str())
+				SF_LOG(LogFileImport, Error, "File import failed - %s", FilePath.string().c_str())
 			}
 		}
 

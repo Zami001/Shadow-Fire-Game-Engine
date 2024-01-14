@@ -1,6 +1,10 @@
 #include <UI/UIElement.h>
 #include <UI/Panels/UIPanel.h>
 
+void UIElement::Render(Bounds2Di Bounds, Vector2i Screensize) {
+	
+}
+
 void UIElement::ParentUpdated() {
 	ParentRoot = Parent ? Parent->GetRoot() : nullptr;
 }
@@ -111,6 +115,32 @@ void UIElement::SetSlicedBoxRender(Bounds2Di ScreenPos, Vector2i ScreenSize, Sli
 
 	delete[] verts;
 	delete[] indices;
+}
+
+void UIElement::OnMouseMove(Vector2i MousePos) {
+	bool Hovering = LastBounds.Contains(MousePos);
+
+	if (hasMouseHover != Hovering) {
+		hasMouseHover = Hovering;
+		
+		if (Hovering) {
+			OnMouseOver();
+		} else {
+			OnMouseLeave();
+		}
+	}
+}
+
+UIEventResponse UIElement::OnKeyEvent(Keycode key, ButtonState state) {
+	switch (key) {
+		case Keycode::MouseLeft:
+			if (IsMouseHovered()) {
+				return OnMouseClick();
+			}
+			break;
+	}
+
+	return UIEventResponse::Unhandled;
 }
 
 void UIElement::SetParent(SFWeakPtr<UIPanel> NewParent) {

@@ -26,6 +26,10 @@ struct vec_base<DataType, 2> {
 
 	constexpr vec_base() : x(0), y(0) {};
 	constexpr vec_base(DataType x, DataType y) : x(x), y(y) {}
+
+	inline std::string ToString() const {
+		return std::format("({}, {})", x, y);
+	}
 };
 
 template<typename DataType>
@@ -47,7 +51,7 @@ struct vec_base<DataType, 3> {
 		};
 	}
 
-	std::string ToString() const {
+	inline std::string ToString() const {
 		return std::format("({}, {}, {})", x, y, z);
 	}
 };

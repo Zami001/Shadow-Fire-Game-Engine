@@ -3,12 +3,16 @@
 
 void ConsoleLogger::OutputLog(LogSeverity Severity, const std::string& Category, const std::string& Message) {
 	switch (Severity) {
-        case LogSeverity::Trace:
-            std::cout << "\x1B[0mTrace: " << Message << "\n";
+        case LogSeverity::VeryVerbose:
+            std::cout << "\x1B[90mVeryVerbose: " << Message << "\033[0m\n";
+            break;
+
+        case LogSeverity::Verbose:
+            std::cout << "\x1B[90mVerbose: " << Message << "\033[0m\n";
             break;
 
         case LogSeverity::Profiling:
-            std::cout << "\x1B[0mProfiling: " << Message << "\n";
+            std::cout << "\x1B[37mProfiling: " << Message << "\033[0m\n";
             break;
 
         case LogSeverity::Log:

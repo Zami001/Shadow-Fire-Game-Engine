@@ -4,6 +4,7 @@
 #include <functional>
 #include <vector>
 #include <chrono>
+#include <MinimalCore.h>
 
 class ENGINE_API TickManager {
 	friend class Game;
