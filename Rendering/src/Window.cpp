@@ -120,44 +120,44 @@ LRESULT Window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			break;
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
-			window->input.SetButtonDown(TranslateKeycode(wParam, lParam));
+			window->input.SetButtonState(TranslateKeycode(wParam, lParam), ButtonState::Down);
 			break;
 		case WM_SYSKEYUP:
 		case WM_KEYUP:
-			window->input.SetButtonUp(TranslateKeycode(wParam, lParam));
+			window->input.SetButtonState(TranslateKeycode(wParam, lParam), ButtonState::Up);
 			break;
 
 		case WM_LBUTTONDOWN:
-			window->input.SetButtonDown(Keycode::MouseLeft);
+			window->input.SetButtonState(Keycode::MouseLeft, ButtonState::Down);
 			break;
 		case WM_LBUTTONUP:
-			window->input.SetButtonUp(Keycode::MouseLeft);
+			window->input.SetButtonState(Keycode::MouseLeft, ButtonState::Up);
 			break;
 		case WM_RBUTTONDOWN:
-			window->input.SetButtonDown(Keycode::MouseRight);
+			window->input.SetButtonState(Keycode::MouseRight, ButtonState::Down);
 			break;
 		case WM_RBUTTONUP:
-			window->input.SetButtonUp(Keycode::MouseRight);
+			window->input.SetButtonState(Keycode::MouseRight, ButtonState::Up);
 			break;
 		case WM_MBUTTONDOWN:
-			window->input.SetButtonDown(Keycode::MouseMiddle);
+			window->input.SetButtonState(Keycode::MouseMiddle, ButtonState::Down);
 			break;
 		case WM_MBUTTONUP:
-			window->input.SetButtonUp(Keycode::MouseMiddle);
+			window->input.SetButtonState(Keycode::MouseMiddle, ButtonState::Up);
 			break;
 		case WM_XBUTTONDOWN:
 			if (HIWORD(wParam) == XBUTTON1) {
-				window->input.SetButtonUp(Keycode::XButton1);
+				window->input.SetButtonState(Keycode::XButton1, ButtonState::Down);
 			} else {
-				window->input.SetButtonUp(Keycode::XButton2);
+				window->input.SetButtonState(Keycode::XButton2, ButtonState::Down);
 			}
 			break;
 
 		case WM_XBUTTONUP:
 			if (HIWORD(wParam) == XBUTTON1) {
-				window->input.SetButtonDown(Keycode::XButton1);
+				window->input.SetButtonState(Keycode::XButton1, ButtonState::Up);
 			} else {
-				window->input.SetButtonDown(Keycode::XButton2);
+				window->input.SetButtonState(Keycode::XButton2, ButtonState::Up);
 			}
 
 		case WM_MOUSEWHEEL:

@@ -18,6 +18,6 @@ private:
 	void OnMouseMove(Vector2i MousePos);
 	void OnKeyEvent(Keycode key, ButtonState state);
 
-	InputManager::Handle mouseHandle;
-	InputManager::Handle buttonHandle;
+	DelegateHandle mouseHandle;
+	DelegateHandle buttonHandle;
 };

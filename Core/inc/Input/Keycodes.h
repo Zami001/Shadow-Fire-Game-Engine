@@ -214,7 +214,7 @@ enum class CORE_API Keycode : unsigned short {
 	MAX_VALUE
 };
 
-enum class CORE_API ButtonState {
+enum class CORE_API ButtonState : unsigned char {
 	Down,
 	Up,
 };

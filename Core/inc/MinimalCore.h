@@ -8,3 +8,4 @@
 #include <Math/Constants.h>
 #include <Math/Quaternion.h>
 #include <Containers/SFObjectContainer.h>
+#include <MulticastDelegate.h>
