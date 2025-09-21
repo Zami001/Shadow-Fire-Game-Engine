@@ -32,6 +32,5 @@ void UIComponent::OnMouseMove(Vector2i MousePos) {
 }
 
 void UIComponent::OnKeyEvent(Keycode key, ButtonState state) {
-	SF_LOG(LogTest, Log, "Key has been pressed: %i", static_cast<int>(key))
 	UI->OnKeyEvent(key, state);
 }

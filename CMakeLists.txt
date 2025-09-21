@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.18)
+﻿cmake_minimum_required (VERSION 3.24)
 
 set(SF_ENGINE_BUILD ON)
 
@@ -38,29 +38,29 @@ macro(SF_SETUP_MODULE tar)
 	    PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc/>" "$<INSTALL_INTERFACE:include/${tar}>"
     )
 
-    install ( TARGETS ${tar} 
-	    EXPORT ${tar}Targets
-	    RUNTIME
-    )
+    #install ( TARGETS ${tar} 
+	#    EXPORT ${tar}Targets
+	#    RUNTIME
+    #)
 
-    install ( EXPORT ${tar}Targets 
-	    FILE ${tar}Targets.cmake
-	    DESTINATION lib/cmake/${tar}
-    )
+    #install ( EXPORT ${tar}Targets 
+	#    FILE ${tar}Targets.cmake
+	#    DESTINATION lib/cmake/${tar}
+    #)
 
-    install ( DIRECTORY inc/ DESTINATION include/${tar} FILE_PERMISSIONS WORLD_READ )
+    #install ( DIRECTORY inc/ DESTINATION include/${tar} FILE_PERMISSIONS WORLD_READ )
     #install ( DIRECTORY src/ DESTINATION source/${tar} FILE_PERMISSIONS WORLD_READ )
 
-    write_basic_package_version_file (
-        "${CMAKE_CURRENT_BINARY_DIR}/${tar}ConfigVersion.cmake"
-        VERSION "${${tar}_VERSION_MAJOR}.${${tar}_VERSION_MINOR}"
-        COMPATIBILITY AnyNewerVersion
-    )
+    #write_basic_package_version_file (
+    #    "${CMAKE_CURRENT_BINARY_DIR}/${tar}ConfigVersion.cmake"
+    #    VERSION "${${tar}_VERSION_MAJOR}.${${tar}_VERSION_MINOR}"
+    #    COMPATIBILITY AnyNewerVersion
+    #)
 
-    install ( FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/${tar}ConfigVersion.cmake
-        DESTINATION lib/cmake/${tar}
-    )
+    #install ( FILES
+    #    ${CMAKE_CURRENT_BINARY_DIR}/${tar}ConfigVersion.cmake
+    #    DESTINATION lib/cmake/${tar}
+    #)
 
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external")
         add_custom_command(
@@ -100,14 +100,14 @@ else()
     set_directory_properties( PROPERTIES VS_STARTUP_PROJECT Engine )
 endif()
 
-configure_package_config_file ( ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/ShadowFireConfig.cmake"
-    INSTALL_DESTINATION "lib/cmake/ShadowFire"
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
+#configure_package_config_file ( ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+#    "${CMAKE_CURRENT_BINARY_DIR}/ShadowFireConfig.cmake"
+#    INSTALL_DESTINATION "lib/cmake/ShadowFire"
+#    NO_SET_AND_CHECK_MACRO
+#    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+#)
 
-install ( FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/ShadowFireConfig.cmake
-    DESTINATION lib/cmake/ShadowFire
-)
+#install ( FILES
+#    ${CMAKE_CURRENT_BINARY_DIR}/ShadowFireConfig.cmake
+#    DESTINATION lib/cmake/ShadowFire
+#)

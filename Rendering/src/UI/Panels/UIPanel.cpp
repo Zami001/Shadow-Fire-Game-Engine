@@ -9,6 +9,19 @@ void UIPanel::ParentUpdated() {
 	}
 }
 
+void UIPanel::RenderSubelement(SFSharedRef<UIElement>& Element, Bounds2Di Bounds, Vector2i Screensize) {
+	Element->Render(Bounds, Screensize);
+	Element->LastBounds = Bounds;
+}
+
+bool UIPanel::RequiresInput() const {
+	bool result = false;
+	for (int i = 0; i < Subelements.size(); ++i) {
+		result |= Subelements[i]->RequiresInput();
+	}
+	return result;
+}
+
 void UIPanel::OnMouseMove(Vector2i MousePos) {
 	UIElement::OnMouseMove(MousePos);
 

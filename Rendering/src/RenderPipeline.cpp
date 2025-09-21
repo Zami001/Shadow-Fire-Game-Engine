@@ -28,6 +28,7 @@ SFSharedRef<Shader> RenderPipeline::GetShader(std::filesystem::path Filename, Sh
 }
 
 SFSharedRef<Texture2D> RenderPipeline::GetTexture2D(std::filesystem::path Filename) {
+	// todo: handle case of no or inaccessible file at filepath
 	if (!Filename.is_absolute()) {
 		Filename = std::filesystem::absolute(Filename);
 	}

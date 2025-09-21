@@ -1,10 +1,6 @@
 #include <UI/UIElement.h>
 #include <UI/Panels/UIPanel.h>
 
-void UIElement::Render(Bounds2Di Bounds, Vector2i Screensize) {
-	
-}
-
 void UIElement::ParentUpdated() {
 	ParentRoot = Parent ? Parent->GetRoot() : nullptr;
 }

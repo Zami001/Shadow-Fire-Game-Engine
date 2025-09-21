@@ -12,6 +12,8 @@
 #include <Profiling/ScopedProfiler.h>
 #include <Components/UIComponent.h>
 
+#include <Font.h>
+
 void EditorGame::Initialize() {
 	Game::Initialize();
 

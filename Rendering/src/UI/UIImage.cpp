@@ -69,7 +69,7 @@ void UIImage::Initialize() {
 
 	SFSharedRef<Shader> VertShader = GetRoot()->GetRenderPipeline().GetShader("Shaders/UI/Vert.hlsl", ShaderType::Vertex);
 	SFSharedRef<Shader> FragShader = GetRoot()->GetRenderPipeline().GetShader("Shaders/UI/Frag.hlsl", ShaderType::Fragment);
-	SFSharedRef<Texture2D> Texture = GetRoot()->GetRenderPipeline().GetTexture2D("C:\\Users\\Rune_\\Downloads\\neon_landscape_ultrawide_wallpaper_by_ultrawidewalls_dfzydb3-fullview.jpg");
+	SFSharedRef<Texture2D> Texture = GetRoot()->GetRenderPipeline().GetTexture2D("C:\\Users\\Rune_\\Desktop\\Screenshot 2024-12-22 210315.jpg");
 
 	material->BindShaders({ VertShader, FragShader });
 	material->Textures.push_back(Texture);

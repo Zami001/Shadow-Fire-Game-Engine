@@ -14,9 +14,10 @@ public:
 protected:
 	std::vector<SFSharedRef<UIElement>> Subelements;
 	virtual void ParentUpdated() override;
+	void RenderSubelement(SFSharedRef<UIElement>& Element, Bounds2Di Bounds, Vector2i Screensize);
 
 public:
-	virtual bool RequiresInput() const override { return true; }
+	virtual bool RequiresInput() const override;
 	virtual void OnMouseMove(Vector2i MousePos) override;
 	virtual UIEventResponse OnMouseClick() override;
 	virtual UIEventResponse OnKeyEvent(Keycode key, ButtonState state) override;
