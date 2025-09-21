@@ -1,12 +1,7 @@
 cmake_minimum_required (VERSION 3.18)
 
-set(SRC_FILES
-	"src/Editor.cpp"
-  "src/EditorGame.cpp" "src/Project.cpp")
-
-set( HEADER_FILES 
-	"inc/Editor.h"
- "inc/EditorGame.h" "inc/Project.h")
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*")
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "inc/*")
 
 add_executable ( Editor ${SRC_FILES} ${HEADER_FILES} "resources/resources.rc" )
 #add_executable ( Editor WIN32 ${SRC_FILES} ${HEADER_FILES} )

@@ -1,12 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
 
-set(SRC_FILES
-	"src/GameRuntime.cpp"
- )
-
-set( HEADER_FILES 
-	"inc/GameRuntime.h"
-)
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*")
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "inc/*")
 
 add_executable ( GameRuntime ${SRC_FILES} ${HEADER_FILES} )
 

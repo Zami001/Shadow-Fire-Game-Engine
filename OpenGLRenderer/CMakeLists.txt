@@ -3,14 +3,8 @@ cmake_minimum_required ( VERSION 3.12.1 )
 set(GLAD_GL "${GLFW_SOURCE_DIR}/deps/glad/gl.h"
             "${GLFW_SOURCE_DIR}/deps/glad_gl.c")
 
-set( SRC_FILES
-	"src/OpenGLRenderer.cpp"
-  "src/OpenGLPipeline.cpp" "src/OpenGLWindow.cpp" "src/OpenGLMesh.cpp" "src/OpenGLMaterial.cpp" "src/OpenGLShader.cpp" "src/OpenGLRenderTarget.cpp" "src/OpenGLWindowRenderTarget.cpp" "src/OpenGLInputManager.cpp")
-
-set( HEADER_FILES 
-	"inc/OpenGLRenderer.h"
-	"inc/OpenGLPipeline.h"
- "inc/OpenGLWindow.h" "inc/OpenGLMesh.h" "inc/OpenGLMaterial.h" "inc/OpenGLShader.h" "inc/OpenGLRenderTarget.h" "inc/OpenGLWindowRenderTarget.h" "inc/OpenGLInputManager.h")
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*")
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "inc/*")
 
 add_library ( OpenGLRenderer ${SRC_FILES} ${HEADER_FILES} ${GLAD_GL} )
 

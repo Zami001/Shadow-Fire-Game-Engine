@@ -1,10 +1,7 @@
 cmake_minimum_required ( VERSION 3.12.1 )
 
-set( SRC_FILES
-	"src/DX11Renderer.cpp" "src/DX11Pipeline.cpp" "src/DX11Window.cpp" "src/DX11Shader.cpp" "src/DX11Material.cpp" "src/DX11Mesh.cpp" "src/DX11VertexBuffer.cpp" "src/Texture/DX11Texture2D.cpp" "src/ShaderIncluder.cpp")
-
-set( HEADER_FILES 
-	"inc/DX11Renderer.h" "inc/DX11Pipeline.h" "inc/DX11Window.h" "inc/DX11Shader.h" "inc/DX11Material.h" "inc/DX11Mesh.h" "inc/DX11VertexBuffer.h" "inc/Texture/DX11Texture2D.h" "inc/ShaderIncluder.h")
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*")
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "inc/*")
 
 add_library ( DX11Renderer ${SRC_FILES} ${HEADER_FILES} )
 

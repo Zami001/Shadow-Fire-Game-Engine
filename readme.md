@@ -14,3 +14,4 @@ This project is primarily a learning project and is not intended to be used in a
 - Audio playback
 - Editor asset serialisation using text format
 - Asset packaging and asset database
+- Sample chess game project
