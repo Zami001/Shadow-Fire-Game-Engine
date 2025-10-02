@@ -113,4 +113,11 @@ void EditorGame::CreateInitialScene() {
 		scene->Serialize(testasset);
 		testasset.WriteToFile("Test Scene.SFASSET");
 	}
+
+	{
+		ScopedProfiler serializeprofiler("Serializer");
+		SerializedAsset testasset;
+		testasset.ReadFromFile("Test Scene.SFASSET");
+		scene->Serialize(testasset);
+	}
 }

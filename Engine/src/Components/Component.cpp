@@ -15,4 +15,5 @@ void Component::Serialize(SerializedAsset& asset) {
 	SFObject::Serialize(asset);
 
 	asset.SetAssetType<Component>();
+	SERIALIZE_OBJECT_REF(asset, AttachedTo);
 }

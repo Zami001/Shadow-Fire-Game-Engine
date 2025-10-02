@@ -8,6 +8,8 @@ public:
 	UIComponent();
 	~UIComponent();
 
+	virtual void Serialize(SerializedAsset& asset) override;
+
 protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Initialize() override;

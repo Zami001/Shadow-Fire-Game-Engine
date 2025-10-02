@@ -1,6 +1,8 @@
 #include <Components/MeshComponent.h>
 #include <Game.h>
 
+AssetType<MeshComponent> assetType;
+
 MeshComponent::MeshComponent() : mesh(nullptr), mat(nullptr) {}
 
 MeshComponent::~MeshComponent() {}

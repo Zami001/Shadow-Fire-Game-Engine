@@ -300,6 +300,14 @@ public:
 		return value == nullptr;
 	}
 
+	//template<typename Subclass>
+	//requires(std::is_base_of_v<T, Subclass>)
+	//inline operator SFObjectLink<Subclass, Threadsafe, StrongLink, AllowNull>() {
+	//	SFObjectLink<Subclass, Threadsafe, StrongLink, AllowNull> ptr;
+	//	ptr.AssignContainer(Container);
+	//	return ptr;
+	//}
+
 	inline operator bool() {
 		return Container != nullptr;
 	}

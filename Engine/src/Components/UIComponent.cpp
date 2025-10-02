@@ -3,6 +3,8 @@
 #include <Application.h>
 #include <UI/UIImage.h>
 
+AssetType<UIComponent> assetType;
+
 UIComponent::UIComponent() : buttonHandle(0), mouseHandle(0) {}
 
 UIComponent::~UIComponent() {
@@ -10,6 +12,12 @@ UIComponent::~UIComponent() {
 
 	GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Remove(buttonHandle);
 	GetGameInstance()->GetWindows()[0]->GetInputManager().OnMouseMoved.Remove(mouseHandle);
+}
+
+void UIComponent::Serialize(SerializedAsset& asset) {
+	Component::Serialize(asset);
+
+	asset.SetAssetType<UIComponent>();
 }
 
 void UIComponent::Tick(float DeltaTime) {

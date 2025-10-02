@@ -28,9 +28,10 @@ class ENGINE_API SFObject {
 
 protected:
 	SFObject();
-	virtual ~SFObject();
 
 public:
+	virtual ~SFObject();
+
 	/// <summary>
 	/// <para>Serialize an object into an asset format.</para>
 	/// <para>In order to recreate the object without an existing object, <see cref="SerializedObject::SetAssetType">SetAssetType</see>

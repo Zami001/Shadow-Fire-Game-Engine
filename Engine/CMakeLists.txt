@@ -18,3 +18,5 @@ target_link_libraries ( Engine
 	Rendering
 	Core
 )
+
+add_subdirectory( tests )

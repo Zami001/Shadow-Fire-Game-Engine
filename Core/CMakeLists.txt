@@ -13,3 +13,5 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "Source" FILES ${SRC_
 target_link_libraries( Core
 	xinput
 )
+
+add_subdirectory(tests)

@@ -1,12 +1,15 @@
 ﻿cmake_minimum_required (VERSION 3.24)
 
 set(SF_ENGINE_BUILD ON)
+set(SF_PROJECT_PATH "" CACHE PATH "Path to shadow fire project game to package")
 
-if(DEFINED SF_PROJECT_PATH)
-    include( "${SF_PROJECT_PATH}/Intermediate/CMakeLists.txt" )
-else()
+if(SF_PROJECT_PATH STREQUAL "")
     project( "Shadow Fire Engine" LANGUAGES CXX C VERSION 0.1 )
+else()
+    include( "${SF_PROJECT_PATH}/Intermediate/CMakeLists.txt" )
 endif()
+
+enable_testing()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/lib) # Output directory for static lib (.LIB)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/bin) # Output directory for shared lib (.DLL)
@@ -72,6 +75,29 @@ macro(SF_SETUP_MODULE tar)
     endif()
 endmacro()
 
+macro(SF_SETUP_TESTS tar)
+    file(GLOB_RECURSE TEST_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CONFIGURE_DEPENDS "*.cpp")
+    create_test_sourcelist(TestSources ${tar}Test.cpp ${TEST_FILES})
+
+    add_executable(${tar}Test ${TestSources})
+
+    target_link_libraries(${tar}Test PRIVATE ${tar})
+
+    foreach(test ${TEST_FILES})
+	    get_filename_component(TName ${test} NAME_WE)
+	    get_filename_component(TDirectory ${test} DIRECTORY)
+	
+	    if(TDirectory STREQUAL "")
+		    set(TDirectoryPrefix "")
+		    set(TDirectory "General")
+	    else()
+		    set(TDirectoryPrefix "${TDirectory}/")
+	    endif()
+
+	    add_test(NAME "${tar}.${TDirectory}.${TName}" COMMAND ${tar}Test "${TDirectoryPrefix}${TName}")
+    endforeach()
+endmacro()
+
 if(${SF_EDITOR})
     add_subdirectory ( Editor )
 else()
@@ -90,14 +116,16 @@ add_subdirectory( "Third Party" )
 add_subdirectory ( Core )
 add_subdirectory ( Rendering )
 add_subdirectory ( Engine )
-add_subdirectory ( OpenGLRenderer )
 add_subdirectory ( DX11Renderer )
 
+#OpenGL has been temporarily abanadoned and as a result is heavily broken. not adding the subdirectory so that tests will continue to build properly
+#add_subdirectory ( OpenGLRenderer )
+
 # Set the startup project.
-if(DEFINED SF_PROJECT_PATH)
-	set_directory_properties( PROPERTIES VS_STARTUP_PROJECT ${SF_TARGET_NAME} )
-else()
+if(SF_PROJECT_PATH STREQUAL "")
     set_directory_properties( PROPERTIES VS_STARTUP_PROJECT Engine )
+else()
+	set_directory_properties( PROPERTIES VS_STARTUP_PROJECT ${SF_TARGET_NAME} )
 endif()
 
 #configure_package_config_file ( ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in

@@ -89,6 +89,14 @@ struct Vector : public vec_base<DataType, Dimensions> {
 		}
 	}
 
+	inline bool operator==(Vector rhs) const noexcept {
+		return std::memcmp(base::v, rhs.v, Dimensions * sizeof(DataType)) == 0;
+	}
+
+	inline bool operator!=(Vector rhs) const noexcept {
+		return std::memcmp(base::v, rhs.v, Dimensions * sizeof(DataType)) != 0;
+	}
+
 	constexpr inline Vector operator+(Vector rhs) const noexcept {
 		Vector vec;
 		for (int i = 0; i < Dimensions; ++i) {
@@ -105,10 +113,26 @@ struct Vector : public vec_base<DataType, Dimensions> {
 		return vec;
 	}
 
+	constexpr inline Vector operator/(Vector rhs) const {
+		Vector vec;
+		for (int i = 0; i < Dimensions; ++i) {
+			vec.v[i] = base::v[i] / rhs.v[i];
+		}
+		return vec;
+	}
+
 	constexpr inline Vector operator/(double scaler) const {
 		Vector vec;
 		for (int i = 0; i < Dimensions; ++i) {
 			vec.v[i] = base::v[i] / scaler;
+		}
+		return vec;
+	}
+
+	constexpr inline Vector operator*(Vector rhs) const noexcept {
+		Vector vec;
+		for (int i = 0; i < Dimensions; ++i) {
+			vec.v[i] = base::v[i] * rhs.v[i];
 		}
 		return vec;
 	}

@@ -1,5 +1,7 @@
 #include <Components/SkeletalMeshComponent.h>
 
+AssetType<SkeletalMeshComponent> assetType;
+
 SkeletalMeshComponent::SkeletalMeshComponent() : Time(0.f) {}
 
 SkeletalMeshComponent::~SkeletalMeshComponent() {}

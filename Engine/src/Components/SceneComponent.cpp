@@ -12,6 +12,7 @@ void SceneComponent::Serialize(SerializedAsset& asset) {
 	asset.SetAssetType<SceneComponent>();
 
 	SERIALIZE_SUBOBJECT_COLLECTION(asset, Subcomponents);
+	SERIALIZE_OBJECT_REF(asset, Parent);
 }
 
 void SceneComponent::SetParent(SceneComponent* NewParent) {

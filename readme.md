@@ -7,11 +7,11 @@ This project is primarily a learning project and is not intended to be used in a
 - Limited retained UI layout system
 - DirectX11 rendering
 - Limited controller support via XInput
+- Editor asset serialisation using text format
 
 ## Planned features
 - Multiplayer network support
 - Text rasterisation and rendering
 - Audio playback
-- Editor asset serialisation using text format
 - Asset packaging and asset database
 - Sample chess game project
