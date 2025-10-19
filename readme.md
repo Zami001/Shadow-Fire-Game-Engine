@@ -1,6 +1,6 @@
 # Shadow Fire Game Engine
 
-This project is primarily a learning project and is not intended to be used in any real capacity.
+This project is primarily a learning and display project and is not intended to be used in any real capacity.
 
 ## Features
 - Importing of 3D models and skeletal animations
@@ -8,10 +8,10 @@ This project is primarily a learning project and is not intended to be used in a
 - DirectX11 rendering
 - Limited controller support via XInput
 - Editor asset serialisation using text format
+- Text rasterisation and rendering using msdfgen
 
 ## Planned features
 - Multiplayer network support
-- Text rasterisation and rendering
 - Audio playback
 - Asset packaging and asset database
 - Sample chess game project
