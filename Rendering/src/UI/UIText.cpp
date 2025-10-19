@@ -143,8 +143,6 @@ Vector2i UIText::SetupLetterVertex(void* verticies, wchar_t letter, wchar_t prev
 	double emSize = geometry.getMetrics().emSize * font->Scale;
 	double lineHeight = geometry.getMetrics().lineHeight * font->Scale;
 
-	std::cout << decender << ", " << ascender << ", " << emSize << ", " << lineHeight << std::endl;
-
 	double advance = 0;
 	if (prevLetter != L'\0') {
 		geometry.getAdvance(advance, prevLetter, letter);
