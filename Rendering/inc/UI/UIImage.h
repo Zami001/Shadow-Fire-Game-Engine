@@ -32,7 +32,7 @@ protected:
 	virtual Vector2i GetDesiredSize() const override;
 
 private:
-	ScaleMode Scale = Sliced;
+	ScaleMode Scale = Stretch;
 
 	SlicedUI Slices = { 600, 150, 600, 150 };
 };

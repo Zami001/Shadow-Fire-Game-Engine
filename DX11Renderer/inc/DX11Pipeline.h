@@ -23,6 +23,7 @@ public:
 	virtual SFSharedRef<Material> CreateMaterial() override;
 	virtual SFSharedRef<Material> GetDefaultMaterial() const override;
 	virtual SFSharedRef<Material> GetErrorMaterial() const override;
+	virtual SFSharedRef<Material> GetDefaultTextMaterial() const override;
 	virtual SFSharedRef<RenderTarget> CreateRenderTarget(const Bounds2Di& bounds) override;
 	virtual void BeginRender(const Camera& camera) override;
 	virtual void EndRender(const Camera& camera) override;
@@ -43,7 +44,9 @@ protected:
 private:
 	SFSharedPtr<Material> DefaultMaterial;
 	SFSharedPtr<Material> ErrorMaterial;
+	SFSharedPtr<Material> DefaultTextMaterial;
 
 	void SetupDefaultMaterial();
 	void SetupErrorMaterial();
+	void SetupDefaultTextMaterial();
 };

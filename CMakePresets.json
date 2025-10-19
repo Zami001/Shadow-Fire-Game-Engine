@@ -1,0 +1,57 @@
+{
+  "version": 9,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 0
+  },
+  "include": [
+  ],
+  "configurePresets": [
+    {
+      "name": "Base",
+      "description": "Base configuration to use for all build presets",
+      "hidden": true,
+      "generator": "Ninja",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "Editor-Base",
+      "hidden": true,
+      "description": "Base configuration for editor builds",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "inherits": [ "Base" ],
+      "cacheVariables": {
+        "SF_EDITOR": true
+      }
+    },
+    {
+      "name": "editor-debug",
+      "displayName": "Editor Debug",
+      "description": "Debug build using Ninja generator",
+      "inherits": "Editor-Base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "editor-release",
+      "displayName": "Editor Release",
+      "description": "Release build using Ninja generator",
+      "inherits": "Editor-Base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    }
+  ]
+}

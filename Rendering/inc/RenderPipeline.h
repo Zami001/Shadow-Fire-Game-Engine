@@ -26,6 +26,7 @@ public:
 	virtual SFSharedRef<Material> CreateMaterial() = 0;
 	virtual SFSharedRef<Material> GetDefaultMaterial() const = 0;
 	virtual SFSharedRef<Material> GetErrorMaterial() const = 0;
+	virtual SFSharedRef<Material> GetDefaultTextMaterial() const = 0;
 	virtual SFSharedRef<RenderTarget> CreateRenderTarget(const Bounds2Di& bounds) = 0;
 	virtual void BeginRender(const Camera& camera) = 0;
 	virtual void EndRender(const Camera& camera) = 0;

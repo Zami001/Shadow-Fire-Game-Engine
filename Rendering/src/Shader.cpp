@@ -7,5 +7,6 @@ bool Shader::BuildShader(const char* str) {
 	}
 
 	isValid = CompileShader(str);
+	data = str;
 	return isValid;
 }

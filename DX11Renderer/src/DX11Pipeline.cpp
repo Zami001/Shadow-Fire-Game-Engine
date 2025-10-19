@@ -20,6 +20,8 @@ Microsoft::WRL::ComPtr<ID3D11SamplerState> DX11Pipeline::SamplerState;
 ShaderIncluder DX11Pipeline::Includer;
 
 void DX11Pipeline::Init() {
+	RenderPipeline::Init();
+
 	SF_LOG(Render Pipeline, Log, "Initializing DX11 Render Pipeline");
 
 	D3D_FEATURE_LEVEL levels[] = {
@@ -125,9 +127,12 @@ void DX11Pipeline::Init() {
 
 	SetupDefaultMaterial();
 	SetupErrorMaterial();
+	SetupDefaultTextMaterial();
 }
 
 void DX11Pipeline::Shutdown() {
+	RenderPipeline::Shutdown();
+
 	DefaultMaterial = nullptr;
 	ErrorMaterial = nullptr;
 	ImageFactory.Reset();
@@ -268,6 +273,10 @@ SFSharedRef<Material> DX11Pipeline::GetErrorMaterial() const {
 	return ErrorMaterial;
 }
 
+SFSharedRef<Material> DX11Pipeline::GetDefaultTextMaterial() const {
+	return DefaultTextMaterial;
+}
+
 SFSharedRef<RenderTarget> DX11Pipeline::CreateRenderTarget(const Bounds2Di& bounds) {
 	return nullptr;
 }
@@ -296,4 +305,9 @@ void DX11Pipeline::SetupDefaultMaterial() {
 void DX11Pipeline::SetupErrorMaterial() {
 	ErrorMaterial = new DX11Material();
 	ErrorMaterial->BindShaders({ GetShader("Shaders/Error/Vert.hlsl", ShaderType::Vertex), GetShader("Shaders/Error/Frag.hlsl", ShaderType::Fragment) });
+}
+
+void DX11Pipeline::SetupDefaultTextMaterial() {
+	//DefaultTextMaterial = new DX11Material();
+	//DefaultMaterial->BindShaders({ GetShader("Shaders/Text/Vert.hlsl", ShaderType::Vertex), GetShader("Shaders/Text/Frag.hlsl", ShaderType::Fragment) });
 }

@@ -15,7 +15,11 @@ public:
 	virtual ~DX11Texture2D() = default;
 
 	virtual void LoadFile(std::filesystem::path FilePath) override;
+	virtual void SubmitRawData(const void* data, TextureFormat format, size_t width, size_t height) override;
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SRV;
+
+private:
+
 };

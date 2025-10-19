@@ -1,12 +1,13 @@
 #include <RenderPipeline.h>
 #include <ShaderImporter.h>
+#include <Font.h>
 
 void RenderPipeline::Init() {
-	
+	Font::InitializeFreeType();
 }
 
 void RenderPipeline::Shutdown() {
-	
+	Font::DeinitializeFreeType();
 }
 
 SFSharedRef<Shader> RenderPipeline::GetShader(std::filesystem::path Filename, ShaderType Type) {

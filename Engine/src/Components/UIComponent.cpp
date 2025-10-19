@@ -1,7 +1,10 @@
 #include <Components/UIComponent.h>
 #include <Game.h>
 #include <Application.h>
+
+// includes only for testing
 #include <UI/UIImage.h>
+#include <UI/UIText.h>
 
 AssetType<UIComponent> assetType;
 
@@ -29,7 +32,10 @@ void UIComponent::Initialize() {
 
 	EnableTick();
 	UI = new UIRoot(GetGameInstance()->GetRenderer());
-	UI->AddElement<UIImage>();
+	//UI->AddElement<UIImage>();
+	auto text = UI->AddElement<UIText>();
+	text->SetText(L"(test|fg)Ý");
+	text->SetText("This is a test");
 
 	buttonHandle = GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Add([this](Keycode Key, ButtonState State) { OnKeyEvent(Key, State); });
 	mouseHandle = GetGameInstance()->GetWindows()[0]->GetInputManager().OnMouseMoved.Add([this](Vector2i MousePos) { OnMouseMove(MousePos); });

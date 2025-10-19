@@ -39,4 +39,6 @@ public:
 	inline bool GetValid() const {
 		return isValid;
 	}
+
+	std::string data;
 };

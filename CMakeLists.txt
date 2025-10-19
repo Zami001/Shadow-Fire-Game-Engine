@@ -11,9 +11,9 @@ endif()
 
 enable_testing()
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/lib) # Output directory for static lib (.LIB)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/bin) # Output directory for shared lib (.DLL)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/bin) # Output directory for executables (.EXE)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build/lib) # Output directory for static lib (.LIB)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build/bin) # Output directory for shared lib (.DLL)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build/bin) # Output directory for executables (.EXE)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -66,12 +66,13 @@ macro(SF_SETUP_MODULE tar)
     #)
 
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external")
-        add_custom_command(
-	        TARGET ${tar} POST_BUILD
-	        COMMAND "${CMAKE_COMMAND}" -E copy_directory
-			"${CMAKE_CURRENT_SOURCE_DIR}/external/"
+        add_custom_target( ${tar}-Externals ALL
+            COMMAND "${CMAKE_COMMAND}" -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/external/"
 			"$<TARGET_FILE_DIR:${tar}>/"
         )
+
+        add_dependencies(${tar} ${tar}-Externals)
     endif()
 endmacro()
 
@@ -80,6 +81,8 @@ macro(SF_SETUP_TESTS tar)
     create_test_sourcelist(TestSources ${tar}Test.cpp ${TEST_FILES})
 
     add_executable(${tar}Test ${TestSources})
+
+    add_dependencies(${tar}Test ${tar})
 
     target_link_libraries(${tar}Test PRIVATE ${tar})
 

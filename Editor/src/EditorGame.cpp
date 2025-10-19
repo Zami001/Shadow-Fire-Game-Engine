@@ -120,4 +120,7 @@ void EditorGame::CreateInitialScene() {
 		testasset.ReadFromFile("Test Scene.SFASSET");
 		scene->Serialize(testasset);
 	}
+
+	//Font font;
+	//font.test();
 }

@@ -23,15 +23,16 @@ public:
 	virtual UIEventResponse OnKeyEvent(Keycode key, ButtonState state) override;
 
 	template<typename T>
-	inline std::enable_if_t<std::is_base_of_v<UIElement, T>, SFSharedRef<UIElement>> AddElement() {
-		SFSharedRef<UIElement> element = new T();
+	inline std::enable_if_t<std::is_base_of_v<UIElement, T>, SFSharedRef<T>> AddElement() {
+		SFSharedRef<T> element = new T();
 
 		element->Parent = this;
 		element->ParentRoot = GetRoot();
 
 		Subelements.push_back(element);
 
-		element->Initialize();
+		UIElement* baseElement = element;
+		baseElement->Initialize();
 		return element;
 	}
 

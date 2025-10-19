@@ -15,14 +15,16 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "Source" FILES ${SRC_
 add_dependencies( Rendering Core )
 add_dependencies( Rendering assimp )
 #add_dependencies( Rendering msdfgen::msdfgen-full )
-#add_dependencies( Rendering msdf-atlas-gen )
+#add_dependencies( Rendering msdfgen )
+add_dependencies( Rendering msdf-atlas-gen )
 
 target_link_libraries( Rendering
 	PUBLIC Core
 	PRIVATE assimp
 )
 
-#target_link_libraries( Rendering
-#	PRIVATE msdfgen::msdfgen-full
-#	PRIVATE msdf-atlas-gen
-#)
+target_link_libraries( Rendering
+	#PRIVATE msdfgen::msdfgen-full
+	#PRIVATE msdfgen
+	PRIVATE msdf-atlas-gen
+)

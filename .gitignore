@@ -16,3 +16,4 @@ build
 out
 vcpkg_installed
 CMakeSettings.json
+CMakeUserPresets.json

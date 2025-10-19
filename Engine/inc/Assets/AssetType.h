@@ -13,21 +13,19 @@ class SFObject;
 template<typename T>
 class AssetType {
 private:
-	template<typename U = T, typename std::enable_if_t<std::is_default_constructible<U>::value, bool> = true>
-	void Init() {
-		SF_ASSERT(AssetFactory::GetAssetTypeMap().count(AssetFactory::GetClassName<T>()) == 0, "Asset type already exists in class map, attempting to redefine asset name")
-		AssetFactory::GetAssetTypeMap().insert({ AssetFactory::GetClassName<T>(), []() { return new T(); } });
-	}
+	static_assert(std::is_base_of_v<SFObject, T>, "Asset types must be derived from SFObject");
 
-	template<typename U = T, typename std::enable_if_t<!std::is_default_constructible<U>::value, bool> = true>
 	void Init() {
-		SF_ASSERT(AssetFactory::GetAssetTypeMap().count(AssetFactory::GetClassName<T>()) == 0, "Asset type already exists in class map, attempting to redefine asset name")
-		AssetFactory::GetAssetTypeMap().insert({ AssetFactory::GetClassName<T>(), []() { throw new std::exception("Attempted to instantiate an asset without a valid default constructor"); return nullptr; } });
+		SF_ASSERT(AssetFactory::GetAssetTypeMap().count(AssetFactory::GetClassName<T>()) == 0, "Asset type already exists in class map, attempting to redefine asset name");
+		if constexpr (std::is_default_constructible<T>::value) {
+			AssetFactory::GetAssetTypeMap().insert({ AssetFactory::GetClassName<T>(), []() { return new T(); } });
+		} else {
+			AssetFactory::GetAssetTypeMap().insert({ AssetFactory::GetClassName<T>(), []() { throw new std::exception("Attempted to instantiate an asset type without a valid default constructor"); return nullptr; } });
+		}
 	}
 
 public:
 	AssetType() {
-		static_assert(std::is_base_of<SFObject, T>::value, "Asset types must derive from SFObject");
 		Init();
 	}
 

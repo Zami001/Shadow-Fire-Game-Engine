@@ -121,11 +121,25 @@ static WICConvert g_WICConvert[] =
 	// We don't support n-channel formats
 };
 
+struct TextureFormatTranslate {
+	TextureFormat TexFormat;
+	DXGI_FORMAT dxgiFormat;
+};
 
+static TextureFormatTranslate g_TextureFormatConvert[] = {
+	{ TextureFormat::R32G32B32_FLOAT,		DXGI_FORMAT_R32G32B32_FLOAT },
+	{ TextureFormat::R32G32B32A32_FLOAT,	DXGI_FORMAT_R32G32B32A32_FLOAT },
+	{ TextureFormat::R8G8B8A8_UNORM,		DXGI_FORMAT_R8G8B8A8_UNORM }
+};
 
+DXGI_FORMAT TextureFormatToDXGI(TextureFormat pixelFormat) {
+	for (size_t i = 0; i < _countof(g_WICFormats); ++i) {
+		if (memcmp(&g_TextureFormatConvert[i].TexFormat, &pixelFormat, sizeof(TextureFormat)) == 0)
+			return g_TextureFormatConvert[i].dxgiFormat;
+	}
 
-
-
+	return DXGI_FORMAT_UNKNOWN;
+}
 
 
 
@@ -258,4 +272,47 @@ void DX11Texture2D::LoadFile(std::filesystem::path FilePath) {
 	result = DX11Pipeline::device->CreateShaderResourceView(tex.Get(), &resourceDesc, &SRV);
 
 	SF_LOG(Texture Import, Log, "Texture imported: size - %i x %i", Width, Height)
+}
+
+void DX11Texture2D::SubmitRawData(const void* data, TextureFormat format, size_t width, size_t height) {
+	DXGI_FORMAT dxFormat = TextureFormatToDXGI(format);
+
+	uint32_t support = 0;
+	HRESULT result = DX11Pipeline::device->CheckFormatSupport(dxFormat, &support);
+	std::cout << result << std::endl;
+
+	Width = width;
+	Height = height;
+
+	D3D11_TEXTURE2D_DESC desc;
+	desc.Width = width;
+	desc.Height = height;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = dxFormat;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0; // D3D11_RESOURCE_MISC_GENERATE_MIPS
+
+	size_t bytesPerPixel = BytesPerPixel(format);
+
+	D3D11_SUBRESOURCE_DATA initData;
+	initData.pSysMem = data;
+	initData.SysMemPitch = bytesPerPixel * width; //static_cast<uint32_t>(rowPitch);
+	initData.SysMemSlicePitch = bytesPerPixel * width * height; //static_cast<uint32_t>(imageSize);
+
+	result = DX11Pipeline::device->CreateTexture2D(&desc, &initData, &tex);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
+	resourceDesc.Format = dxFormat;
+	resourceDesc.Texture2D.MipLevels = 1;
+	resourceDesc.Texture2D.MostDetailedMip = 0;
+	resourceDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
+
+	result = DX11Pipeline::device->CreateShaderResourceView(tex.Get(), &resourceDesc, &SRV);
+
+	SF_LOG(Texture Import, Log, "Texture created from memory: size - %i x %i", Width, Height)
 }
