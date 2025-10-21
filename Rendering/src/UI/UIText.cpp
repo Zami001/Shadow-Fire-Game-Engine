@@ -30,8 +30,37 @@ std::wstring UIText::GetText() const {
 	return text;
 }
 
+double UIText::GetCharacterWidth(wchar_t character) const {
+	return font->fontGeometry.getGlyph(character)->getAdvance() * font->Scale;
+}
+
+double UIText::GetTextWidth(const std::wstring& str) const {
+	double longestLine = 0;
+	double width = 0;
+
+	for (int i = 1; i < str.size(); ++i) {
+		if (str[i] == L'\r' || str[i] == L'\n') {
+			width += GetCharacterWidth(str[i]);
+			longestLine = longestLine > width ? longestLine : width;
+			width = 0;
+			continue;
+		}
+
+		double increment;
+		font->fontGeometry.getAdvance(increment, str[i], str[i - 1]);
+		width += increment * font->Scale;
+	}
+
+	return longestLine > width ? longestLine : width;
+}
+
+double UIText::GetTextWidth() const {
+	return GetTextWidth(text);
+}
+
 void UIText::Render(Bounds2Di Bounds, Vector2i Screensize) {
 	if (IsDirty()) {
+		//std::cout << GetCharacterWidth(L'T') << std::endl;
 		SetupVertexBuffer(Bounds, Screensize);
 		ClearDirty();
 	}
@@ -71,10 +100,10 @@ struct Vertex {
 
 void UIText::SetupVertexBuffer(Bounds2Di Bounds, Vector2i Screensize) {
 	// find whitespaces that arn't included in rendered geometry
-	msdf_atlas::FontGeometry& geometry = *reinterpret_cast<msdf_atlas::FontGeometry*>(font->Geometry);
+	msdf_atlas::FontGeometry& geometry = font->fontGeometry;
 	size_t whiteSpaces = 0;
 	for (int i = 0; i < text.size(); ++i) {
-		if (geometry.getGlyph(text[i])->isWhitespace()) {
+		if (text[i] == L'\r' || text[i] == L'\n' || geometry.getGlyph(text[i])->isWhitespace()) {
 			whiteSpaces++;
 		}
 	}
@@ -96,12 +125,27 @@ void UIText::SetupVertexBuffer(Bounds2Di Bounds, Vector2i Screensize) {
 	Vertex* vertInsert = verts;
 
 	for (int i = 0; i < text.size(); ++i) {
+		// account for newlines
+		if (text[i] == L'\r' || text[i] == L'\n') {
+			pos.x = Bounds.position.x;
+			pos.y += font->fontGeometry.getMetrics().lineHeight * font->Scale;
+
+			// treat \r\n as single newline
+			if (text.size() > i + 1 && text[i] == L'\r' && text[i + 1] == L'\n') {
+				i++;
+			}
+
+			prevLetter = text[i];
+			continue;
+		}
+
 		// increment whitespace positioning but not vertex count
 		if (geometry.getGlyph(text[i])->isWhitespace()) {
 			double advance = 0;
 			if (prevLetter != L'\0') {
 				geometry.getAdvance(advance, prevLetter, text[i]);
 			}
+
 			pos.x += advance * font->Scale;
 			prevLetter = text[i];
 			continue;
@@ -136,7 +180,7 @@ void UIText::SetupVertexBuffer(Bounds2Di Bounds, Vector2i Screensize) {
 
 Vector2i UIText::SetupLetterVertex(void* verticies, wchar_t letter, wchar_t prevLetter, Vector2i prevPosition, Vector2i ScreenSize) {
 	Vertex* verts = reinterpret_cast<Vertex*>(verticies);
-	msdf_atlas::FontGeometry& geometry = *reinterpret_cast<msdf_atlas::FontGeometry*>(font->Geometry);
+	msdf_atlas::FontGeometry& geometry = font->fontGeometry;
 	Vector2i pos = prevPosition;
 	double ascender = geometry.getMetrics().ascenderY * font->Scale;
 	double decender = geometry.getMetrics().descenderY * font->Scale;
@@ -144,7 +188,7 @@ Vector2i UIText::SetupLetterVertex(void* verticies, wchar_t letter, wchar_t prev
 	double lineHeight = geometry.getMetrics().lineHeight * font->Scale;
 
 	double advance = 0;
-	if (prevLetter != L'\0') {
+	if (prevLetter != L'\0' && prevLetter != L'\r' && prevLetter != L'\n') {
 		geometry.getAdvance(advance, prevLetter, letter);
 		pos.x += advance * font->Scale;
 	}

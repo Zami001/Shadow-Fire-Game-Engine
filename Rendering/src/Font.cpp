@@ -3,35 +3,21 @@
 #include <Font.h>
 #include <iostream>
 #include <RenderPipeline.h>
-//#include <msdfgen.h>
-//#include <msdfgen-ext.h>
 
-
-#include <msdf-atlas-gen/msdf-atlas-gen.h>
-
-//using namespace msdfgen;
 using namespace msdf_atlas;
 
 msdfgen::FreetypeHandle* Font::FreeType;
 
-Font::Font(RenderPipeline& pipeline) : CharacterAtlas(pipeline.CreateTexture2D()), Geometry(nullptr), Glyphs(nullptr) {
+Font::Font(RenderPipeline& pipeline) : CharacterAtlas(pipeline.CreateTexture2D()), Scale(0) {
+    fontGeometry = msdf_atlas::FontGeometry(&glyphs);
 }
 
 Font::~Font() {
-    delete Glyphs;
-    delete Geometry;
 }
 
 void Font::LoadFontFile(const char* filename) {
     bool success = false;
     if (msdfgen::FontHandle* font = msdfgen::loadFont(FreeType, filename)) {
-        delete Geometry;
-        delete Glyphs;
-        std::vector<GlyphGeometry>& glyphs = *new std::vector<GlyphGeometry>();
-        FontGeometry& fontGeometry = *new FontGeometry(&glyphs);
-        Glyphs = &glyphs;
-        Geometry = &fontGeometry;
-
         Charset charset = Charset::ASCII;
         charset.add(L'Ý');
         fontGeometry.loadCharset(font, 2.0, charset);

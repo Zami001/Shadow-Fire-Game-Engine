@@ -34,8 +34,8 @@ void UIComponent::Initialize() {
 	UI = new UIRoot(GetGameInstance()->GetRenderer());
 	//UI->AddElement<UIImage>();
 	auto text = UI->AddElement<UIText>();
-	text->SetText(L"(test|fg)Ý");
-	text->SetText("This is a test");
+	//text->SetText(L"(test|fg)Ý");
+	text->SetText("This is a test\r\nThis is also a test");
 
 	buttonHandle = GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Add([this](Keycode Key, ButtonState State) { OnKeyEvent(Key, State); });
 	mouseHandle = GetGameInstance()->GetWindows()[0]->GetInputManager().OnMouseMoved.Add([this](Vector2i MousePos) { OnMouseMove(MousePos); });

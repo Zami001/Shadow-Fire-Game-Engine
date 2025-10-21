@@ -14,6 +14,10 @@ public:
 	void SetText(const std::string& newText);
 	std::wstring GetText() const;
 
+	double GetCharacterWidth(wchar_t character) const;
+	double GetTextWidth(const std::wstring& str) const;
+	double GetTextWidth() const;
+
 protected:
 	virtual void Render(Bounds2Di Bounds, Vector2i Screensize) override;
 	virtual void Initialize() override;

@@ -2,6 +2,7 @@
 
 #include <Rendering.h>
 #include <Texture/Texture2D.h>
+#include <msdf-atlas-gen/msdf-atlas-gen.h>
 
 namespace msdfgen {
 	class FreetypeHandle;
@@ -22,8 +23,8 @@ private:
 	static msdfgen::FreetypeHandle* FreeType;
 
 	SFSharedRef<Texture2D> CharacterAtlas;
-	void* Geometry;
-	void* Glyphs;
+	msdf_atlas::FontGeometry fontGeometry;
+	std::vector<msdf_atlas::GlyphGeometry> glyphs;
 	double Scale;
 
 	static void InitializeFreeType();
