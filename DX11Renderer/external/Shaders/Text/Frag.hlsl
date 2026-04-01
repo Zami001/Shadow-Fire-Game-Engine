@@ -36,7 +36,8 @@ float4 main(PS_INPUT In) : SV_TARGET {
     float screenPxDistance = screenPxRange() * (sd - 0.5);
     float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
     
-    float4 col = smoothstep(float4(0, 0, 0, sample.a), float4(1, 1, 1, sample.a), opacity);
+    float4 col = smoothstep(float4(0, 0, 0, 1), float4(1, 1, 1, 1), opacity);
+    //return float4(1, 1, 1, 1);
     //return opacity;
-    return col * sample.a;
+    return float4(col.rgb, sample.a);
 }

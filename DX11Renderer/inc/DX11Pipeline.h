@@ -35,6 +35,7 @@ public:
 	static Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 	static Microsoft::WRL::ComPtr<IWICImagingFactory> ImageFactory;
 	static Microsoft::WRL::ComPtr<ID3D11SamplerState> SamplerState;
+	static Microsoft::WRL::ComPtr<ID3D11BlendState> BlendState;
 
 	static ShaderIncluder Includer;
 

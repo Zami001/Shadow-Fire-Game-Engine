@@ -19,7 +19,6 @@ void UIText::SetText(const std::string& newText) {
 
 	for (int i = 0; i < newText.size(); ++i) {
 		newString.push_back(newText[i]);
-		//newString[i] = newText[i];
 	}
 
 	text = std::move(newString);
@@ -30,37 +29,79 @@ std::wstring UIText::GetText() const {
 	return text;
 }
 
-double UIText::GetCharacterWidth(wchar_t character) const {
-	return font->fontGeometry.getGlyph(character)->getAdvance() * font->Scale;
+int UIText::GetCharacterWidth(wchar_t character) const {
+	double x, y, w, h;
+	font->fontGeometry.getGlyph(character)->getQuadPlaneBounds(x, y, w, h);
+	return (w) * font->Scale;
 }
 
-double UIText::GetTextWidth(const std::wstring& str) const {
+Vector2i UIText::GetTextSize(const std::wstring& str) const {
 	double longestLine = 0;
-	double width = 0;
+	size_t width = 0;
+	size_t lines = 1;
 
 	for (int i = 1; i < str.size(); ++i) {
 		if (str[i] == L'\r' || str[i] == L'\n') {
-			width += GetCharacterWidth(str[i]);
+			width += GetCharacterWidth(str[i - 1]);
 			longestLine = longestLine > width ? longestLine : width;
 			width = 0;
+
+			lines++;
+
+			if (str.size() > i + 1 && str[i] == L'\r' && str[i + 1] == L'\n') {
+				++i;
+			}
 			continue;
 		}
 
 		double increment;
-		font->fontGeometry.getAdvance(increment, str[i], str[i - 1]);
+		font->fontGeometry.getAdvance(increment, str[i - 1], str[i]);
 		width += increment * font->Scale;
 	}
 
-	return longestLine > width ? longestLine : width;
+	wchar_t lastChar = str[str.size() - 1];
+	if (lastChar != L'\r' && lastChar != L'\n') {
+		width += GetCharacterWidth(lastChar);
+	}
+
+	return Vector2i((longestLine > width ? longestLine : width), font->fontGeometry.getMetrics().lineHeight * lines * font->Scale);
+}
+
+double UIText::GetTextWidth(const std::wstring& str) const {
+	return GetTextSize(str).x;
 }
 
 double UIText::GetTextWidth() const {
+	if (!IsDirty()) {
+		return LastBounds.size.x;
+	}
+
 	return GetTextWidth(text);
+}
+
+size_t UIText::CountLines(const std::wstring& str) const {
+	size_t lines = 1;
+	for (int i = 0; i < str.size(); ++i) {
+		if (str[i] == L'\r') {
+			lines++;
+
+			// treat \r\n as a single new line
+			if (str.size() > i + 1 && str[i + 1] == L'\n') {
+				++i;
+				continue;
+			}
+		}
+
+		if (str[i] == L'\n') {
+			lines++;
+		}
+	}
+
+	return lines;
 }
 
 void UIText::Render(Bounds2Di Bounds, Vector2i Screensize) {
 	if (IsDirty()) {
-		//std::cout << GetCharacterWidth(L'T') << std::endl;
 		SetupVertexBuffer(Bounds, Screensize);
 		ClearDirty();
 	}
@@ -78,6 +119,7 @@ void UIText::Initialize() {
 	SFSharedRef<Shader> FragShader = GetRoot()->GetRenderPipeline().GetShader("Shaders/Text/Frag.hlsl", ShaderType::Fragment);
 
 	material->BindShaders({ VertShader, FragShader });
+	material->pass = RenderPass::GUI;
 
 	mesh->GetVertexBuffer().SetDescriptors({
 		VertexBuffer::VertexDescriptor::Position,
@@ -90,7 +132,11 @@ void UIText::Initialize() {
 }
 
 Vector2i UIText::GetDesiredSize() const {
-	return Vector2i(400, 100);
+	//if (!IsDirty()) {
+	//	return LastBounds.size;
+	//}
+
+	return GetTextSize(text);
 }
 
 struct Vertex {
@@ -208,6 +254,8 @@ Vector2i UIText::SetupLetterVertex(void* verticies, wchar_t letter, wchar_t prev
 	fromPos = fromPos * font->Scale;
 	toPos = toPos * font->Scale;
 
+	float maxWidth = 0;
+
 	for (int i = 0; i < 4; ++i) {
 		verts[i].UV.x = (i & 1) ? UVTo.x : UVFrom.x;
 		verts[i].UV.y = (i & 2) ? UVFrom.y : UVTo.y;
@@ -215,6 +263,9 @@ Vector2i UIText::SetupLetterVertex(void* verticies, wchar_t letter, wchar_t prev
 		x = (i % 2) ? pos.x + toPos.x : pos.x + fromPos.x;
 		y = ((i / 2) ? pos.y - fromPos.y : (pos.y - toPos.y)) + ascender;
 		verts[i].position = ScreenPosToScreenSpace(Vector2i(x, y), ScreenSize);
+		if (x > maxWidth) {
+			maxWidth = x;
+		}
 	}
 
 	return pos;

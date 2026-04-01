@@ -16,6 +16,7 @@ Microsoft::WRL::ComPtr<ID3D11RasterizerState> DX11Pipeline::rasterizer;
 Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DX11Pipeline::depthStencilState;
 Microsoft::WRL::ComPtr<IWICImagingFactory> DX11Pipeline::ImageFactory;
 Microsoft::WRL::ComPtr<ID3D11SamplerState> DX11Pipeline::SamplerState;
+Microsoft::WRL::ComPtr<ID3D11BlendState> DX11Pipeline::BlendState;
 
 ShaderIncluder DX11Pipeline::Includer;
 
@@ -78,7 +79,7 @@ void DX11Pipeline::Init() {
 	D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
 	depthStencilStateDesc.DepthEnable = TRUE; // TRUE
 	depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	depthStencilStateDesc.StencilEnable = FALSE;
 	depthStencilStateDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
 	depthStencilStateDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
@@ -98,6 +99,22 @@ void DX11Pipeline::Init() {
 	
 	device->CreateDepthStencilState(&depthStencilStateDesc, &depthStencilState);
 	context->OMSetDepthStencilState(depthStencilState.Get(), 0);
+
+	D3D11_BLEND_DESC blendDesc;
+
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = false;
+	blendDesc.RenderTarget[0].BlendEnable = true;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	device->CreateBlendState(&blendDesc, &BlendState);
+	context->OMSetBlendState(BlendState.Get(), NULL, 0xffffffff);
 
 	D3D11_SAMPLER_DESC SamplerDesc;
 	SamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
