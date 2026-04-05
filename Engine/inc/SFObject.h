@@ -21,7 +21,7 @@ concept PlainObject = requires(T val) {
 	requires !std::is_base_of_v<Component, T>;
 };
 
-class ENGINE_API SFObject {
+class ENGINE_API SFObject : public SharedFromThis<SFObject> {
 	friend Game;
 	friend GameObject;
 	friend Component;

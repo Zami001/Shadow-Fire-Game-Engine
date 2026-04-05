@@ -6,7 +6,7 @@
 class GameObject;
 class Scene;
 
-class ENGINE_API Component : public SFObject, public SharedFromThis<Component, false> {
+class ENGINE_API Component : public SFObject {
 	friend GameObject;
 
 public:
