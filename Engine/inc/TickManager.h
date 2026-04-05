@@ -6,6 +6,15 @@
 #include <chrono>
 #include <MinimalCore.h>
 
+enum class TickStage : int {
+	General,
+	PreRender,
+	Render,
+	GUI,
+	PostRender,
+	NUM_STAGES
+};
+
 class ENGINE_API TickManager {
 	friend class Game;
 
@@ -13,8 +22,8 @@ public:
 	TickManager();
 	~TickManager() = default;
 
-	void RegisterTick(void* context, std::function<void(float)> func);
-	void UnregisterTick(void* context);
+	void RegisterTick(void* context, std::function<void(float)> func, TickStage stage = TickStage::General);
+	void UnregisterTick(void* context, TickStage stage = TickStage::General);
 	void Tick();
 	
 	inline float GetTimeScale() const {
@@ -39,6 +48,6 @@ private:
 	};
 
 	std::chrono::time_point<std::chrono::steady_clock> LastTick;
-	std::vector<TickCallback> Callbacks;
+	std::vector<std::vector<TickCallback>> Callbacks;
 	float TimeScale;
 };

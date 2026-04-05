@@ -5,6 +5,7 @@
 #include <SFGUID.h>
 #include <Assets/SerializedAsset.h>
 #include <Assets/AssetType.h>
+#include <TickManager.h>
 #include <MinimalCore.h>
 
 class SerializedAsset;
@@ -67,7 +68,7 @@ public:
 
 protected:
 	virtual void Tick(float DeltaTime) {}
-	void EnableTick();
+	void EnableTick(TickStage stage = TickStage::General);
 	void DisableTick();
 
 	virtual void Initialize() {};
@@ -78,6 +79,7 @@ private:
 
 	Game* GameInstance;
 	bool UsingTick;
+	TickStage UsingTickStage = TickStage::General;
 
 	template<typename T, typename... Args>
 	inline SFSharedRef<T> ConstructObject(Args... args) {

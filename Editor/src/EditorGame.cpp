@@ -11,6 +11,7 @@
 #include <Math/Quaternion.h>
 #include <Profiling/ScopedProfiler.h>
 #include <Components/UIComponent.h>
+#include <Components/CameraComponent.h>
 
 #include <Font.h>
 
@@ -51,6 +52,7 @@ void EditorGame::CreateInitialScene() {
 	// todo: initialize the editor environment
 	SFSharedPtr<GameObject> obj = scene->SpawnGameObject();
 
+	obj->AddComponent<CameraComponent>();
 	auto meshcomp = obj->AddComponent<SkeletalMeshComponent>();
 	obj->AddComponent<UIComponent>();
 
@@ -107,19 +109,19 @@ void EditorGame::CreateInitialScene() {
 
 	//TimedProfiler fpsTracker("FPS");
 
-	{
-		ScopedProfiler serializeprofiler("Serializer");
-		SerializedAsset testasset;
-		scene->Serialize(testasset);
-		testasset.WriteToFile("Test Scene.SFASSET");
-	}
-
-	{
-		ScopedProfiler serializeprofiler("Serializer");
-		SerializedAsset testasset;
-		testasset.ReadFromFile("Test Scene.SFASSET");
-		scene->Serialize(testasset);
-	}
+	//{
+	//	ScopedProfiler serializeprofiler("Serializer");
+	//	SerializedAsset testasset;
+	//	scene->Serialize(testasset);
+	//	testasset.WriteToFile("Test Scene.SFASSET");
+	//}
+	//
+	//{
+	//	ScopedProfiler serializeprofiler("Serializer");
+	//	SerializedAsset testasset;
+	//	testasset.ReadFromFile("Test Scene.SFASSET");
+	//	scene->Serialize(testasset);
+	//}
 
 	//Font font;
 	//font.test();

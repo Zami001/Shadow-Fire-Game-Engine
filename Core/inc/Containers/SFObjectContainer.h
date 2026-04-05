@@ -21,31 +21,37 @@ using SFSharedRef = SFObjectLink<T, Threadsafe, true, false>;
 template<typename T, bool Threadsafe = false>
 using SFWeakPtr = SFObjectLink<T, Threadsafe, false, true>;
 
-template<typename T, bool Threadsafe = false>
+template<bool Threadsafe = false>
 struct SFObjectContainer {
 	friend SFObjectLink;
 	friend SharedFromThis;
 
 private:
+	struct ContainerRef {
+		void** Value;
+		void** Container;
+
+		ContainerRef() = delete;
+		ContainerRef(void** value, void** container) : Value(value), Container(container) {}
+	};
+
 	static_assert(!Threadsafe, "Thread safe references not yet implemented");
 
 	int StrongRefCount = 0;
-	T* value;
-	std::vector<SFWeakPtr<T, Threadsafe>*> WeakReferences;
+	std::vector<ContainerRef> WeakReferences;
 
-	SFObjectContainer() : value(new T()) {}
-
-	SFObjectContainer(T* object) : value(object) {
-		SF_ASSERT(object, "SFObjectContainer should never be initialized with a nullptr");
-	}
+	SFObjectContainer() {}
 
 	~SFObjectContainer() {
-		delete value;
+		for (ContainerRef Reference : WeakReferences) {
+			*Reference.Value = nullptr;
+			*Reference.Container = nullptr;
+		}
 	}
 
-	inline void RemoveWeakLink(SFWeakPtr<T, Threadsafe>* WeakRef) {
+	inline void RemoveWeakLink(void** WeakRef) {
 		for (int i = 0; i < WeakReferences.size(); ++i) {
-			if (WeakReferences[i] == WeakRef) {
+			if (WeakReferences[i].Value == WeakRef) {
 				WeakReferences[i] = WeakReferences[WeakReferences.size() - 1];
 				WeakReferences.pop_back();
 				break;
@@ -56,14 +62,15 @@ private:
 
 template<typename BaseType, bool Threadsafe> //, bool Threadsafe
 concept Sharable = requires(BaseType Value) {
-	{ Value.AsShared() } -> std::convertible_to<SFSharedPtr<BaseType, Threadsafe>>;
+	{ Value.AsShared() };
+	
 };
 
 template<typename T, bool Threadsafe, bool StrongLink, bool AllowNull>
 struct SFObjectLink {
 	static_assert(!Threadsafe, "Threadsafe links are currently unimplemented");
-	static_assert(StrongLink || AllowNull, "StrongLink cannot be set to true and allownull to be false");
-	using ContainerType = SFObjectContainer<T, Threadsafe>;
+	static_assert(StrongLink || AllowNull, "Either StrongLink or AllowNull must be set true");
+	using ContainerType = SFObjectContainer<Threadsafe>;
 	using ThisType = SFObjectLink<T, Threadsafe, StrongLink, AllowNull>;
 
 	template<typename T, bool Threadsafe, bool StrongLink, bool AllowNull>
@@ -74,6 +81,7 @@ struct SFObjectLink {
 
 private:
 	ContainerType* Container = nullptr;
+	T* Value = nullptr;
 
 public:
 	SFObjectLink() {
@@ -81,23 +89,26 @@ public:
 	}
 
 	template<typename OtherT, bool StrongLinkOther, bool AllowNullOther>
-	requires(std::derived_from<OtherT, T> || std::same_as<T, OtherT>)
+	requires(std::derived_from<OtherT, T>)
 	SFObjectLink(const SFObjectLink<OtherT, Threadsafe, StrongLinkOther, AllowNullOther>& other) {
 		AssignContainer(other.Container);
+		Value = other.Value;
 	}
 
-	SFObjectLink(const ThisType& other) {
+	SFObjectLink(const ThisType& other){
 		AssignContainer(other.Container);
+		Value = other.Value;
 	}
 
 	SFObjectLink(SFObjectLink&& other) noexcept {
 		Container = other.Container;
 		other.Container = nullptr;
+		Value = other.Value;
 
 		if constexpr (!StrongLink) {
 			if (Container) {
-				Container->RemoveWeakLink(&other);
-				Container->WeakReferences.push_back(this);
+				Container->RemoveWeakLink(reinterpret_cast<void**>(&Value));
+				Container->WeakReferences.emplace_back(reinterpret_cast<void**>(&Value), reinterpret_cast<void**>(&Container));
 			}
 		}
 	}
@@ -106,30 +117,48 @@ public:
 	SFObjectLink(SFObjectLink<T, Threadsafe, StrongLinkOther, AllowNullOther>&& other) {
 		Container = other.Container;
 		other.Container = nullptr;
+		Value = other.Value;
 
 		if constexpr ((!StrongLink) || (!StrongLinkOther)) {
 			if (Container) {
+				if constexpr (StrongLink) {
+					Container->StrongRefCount++;
+				} else {
+					Container->WeakReferences.emplace_back(reinterpret_cast<void**>(&Value), reinterpret_cast<void**>(&Container));
+				}
+
 				if constexpr (StrongLinkOther) {
 					if (--Container->StrongRefCount == 0) {
 						delete Container;
 						Container = nullptr;
+						Value = nullptr;
 						return;
 					}
-				}
-
-				if constexpr (StrongLink) {
-					Container->StrongRefCount++;
-				} else {
-					Container->WeakReferences.push_back(this);
 				}
 			}
 		}
 	}
 
-	SFObjectLink(T* value) {
-		if constexpr (AllowNull) {
+	template<typename Ptr>
+	requires(std::derived_from<Ptr, T>)
+	SFObjectLink(Ptr* value) {
+		if constexpr (Sharable<Ptr, Threadsafe>) {
+			if constexpr (AllowNull) {
+				if (value) {
+					auto SharedValue = value->AsShared();
+					AssignContainer(reinterpret_cast<ContainerType*>(SharedValue->Container));
+					Value = value;
+				}
+			} else {
+				SF_ASSERT(value, "Cannot assign nullptr to a shared pointer type that doesn't allow null");
+				auto SharedValue = value->AsShared();
+				AssignContainer(reinterpret_cast<ContainerType*>(SharedValue->Container));
+				Value = value;
+			}
+		} else if constexpr (AllowNull) {
 			if (value) {
-				Container = new ContainerType(value);
+				Container = new ContainerType();
+				Value = value;
 
 				if constexpr (StrongLink) {
 					Container->StrongRefCount++;
@@ -139,9 +168,14 @@ public:
 			}
 		} else {
 			SF_ASSERT(value, "Cannot assign nullptr to a shared pointer type that doesn't allow null");
-			Container = new ContainerType(value);
+			Container = new ContainerType();
 			Container->StrongRefCount++;
+			Value = value;
 		}
+	}
+
+	SFObjectLink(std::nullptr_t) {
+		SF_ASSERT(AllowNull, "Cannot construct a shared pointer type that doesn't allow null from a null pointer type");
 	}
 
 private:
@@ -149,45 +183,41 @@ private:
 		if constexpr (StrongLink) {
 			if (Container) {
 				if (--Container->StrongRefCount == 0) {
-					for (int i = 0; i < Container->WeakReferences.size(); ++i) {
-						Container->WeakReferences[i]->Container = nullptr;
-					}
-
 					delete Container;
+					delete Value;
 				}
 			}
 		} else {
 			if (Container) {
-				Container->RemoveWeakLink(this);
+				Container->RemoveWeakLink(reinterpret_cast<void**>(&Value));
 			}
 		}
+
+		Container = nullptr;
+		Value = nullptr;
 	}
 
-	template<typename Ptr>
-	inline std::enable_if_t<std::is_base_of_v<T, Ptr> || std::is_same_v<T, Ptr>, void> AssignContainer(SFObjectContainer<Ptr, Threadsafe>* NewContainer) {
-		static_assert(sizeof(ContainerType) == sizeof(SFObjectContainer<Ptr, Threadsafe>), "The pointer reinterpret hack will fail if there is a change which affects the container structure based on type");
-
-		ContainerType* _NewContainer = reinterpret_cast<ContainerType*>(NewContainer); // hack: container should always be the same format internally, only c++ semantics affect pointer type
-		if (_NewContainer == Container) {
+	inline void AssignContainer(ContainerType* NewContainer) {
+		if (NewContainer == Container) {
 			return;
 		}
 
 		Release();
-		Container = _NewContainer;
+		Container = NewContainer;
 
 		if constexpr (AllowNull) {
 			SF_ASSERT(NewContainer, "Cannot assign a nullptr to smart pointers with AllowNull set to false");
 			if constexpr (StrongLink) {
 				Container->StrongRefCount++;
 			} else {
-				Container->WeakReferences.push_back(this);
+				Container->WeakReferences.emplace_back(reinterpret_cast<void**>(&Value), reinterpret_cast<void**>(&Container));
 			}
 		} else {
 			if (Container) {
 				if constexpr (StrongLink) {
 					Container->StrongRefCount++;
 				} else {
-					Container->WeakReferences.push_back(this);
+					Container->WeakReferences.emplace_back(reinterpret_cast<void**>(&Value), reinterpret_cast<void**>(&Container));
 				}
 			}
 		}
@@ -199,37 +229,35 @@ public:
 	}
 
 	T* Get() const {
-		if (Container) {
-			return Container->value;
-		}
-
-		return nullptr;
+		return Value;
 	}
 
 	T* operator->() {
-		return Container->value;
+		return Value;
 	}
 
 	T& operator*() {
-		return *Container->value;
+		return *Value;
 	}
 
 	const T* operator->() const {
-		return Container->value;
+		return Value;
 	}
 
 	const T& operator*() const {
-		return *Container->value;
+		return Value;
 	}
 
 	ThisType& operator=(const SFObjectLink& other) {
 		AssignContainer(other.Container);
+		Value = other.Value;
 		return *this;
 	}
 
 	template<typename TOp, bool ThreadsafeOp, bool StrongLinkOp, bool AllowNullOp>
 	ThisType& operator=(const SFObjectLink<TOp, ThreadsafeOp, StrongLinkOp, AllowNullOp>& other) {
 		AssignContainer(other.Container);
+		Value = other.Value;
 		return *this;
 	}
 
@@ -245,8 +273,8 @@ public:
 
 		if constexpr (!StrongLink) {
 			if (Container) {
-				Container->RemoveWeakLink(*other);
-				Container->WeakReferences.push_back(this);
+				Container->RemoveWeakLink(reinterpret_cast<void**>(&other.Container));
+				Container->WeakReferences.emplace_back(reinterpret_cast<void**>(&Value), reinterpret_cast<void**>(&Container));
 			}
 		}
 
@@ -254,36 +282,46 @@ public:
 	}
 
 	template<typename Ptr>
-	inline std::enable_if_t<std::is_base_of_v<T, Ptr>, ThisType&> operator=(Ptr* value) {
+	inline std::enable_if_t<std::is_base_of_v<T, Ptr> || std::is_same_v<T, Ptr>, ThisType&> operator=(Ptr* value) {
 		static_assert(StrongLink, "Cannot assign a raw pointer to a weak pointer directly");
 
 		if constexpr (Sharable<Ptr, Threadsafe>) {
 			// todo: this can be optimised to avoid creating a shared pointer needlessly
 			if constexpr (AllowNull) {
 				if (value) {
-					AssignContainer(value->AsShared()->Container);
+					auto SharedValue = value->AsShared();
+					AssignContainer(SharedValue->Container);
+					Value = value;
 				} else {
 					Release();
-					Container = nullptr;
 				}
 			} else {
 				SF_ASSERT(value, "Cannot assign nullptr to a smart pointer that doesn't allow null");
-				AssignContainer(value->AsShared()->Container);
+				auto SharedValue = value->AsShared();
+				AssignContainer(Container);
+				Value = value;
 			}
 		} else {
 			if constexpr (AllowNull) {
 				if (value) {
-					AssignContainer(new ContainerType(value));
+					AssignContainer(new ContainerType());
+					Value = value;
 				} else {
 					Release();
-					Container = nullptr;
 				}
 			} else {
 				SF_ASSERT(value, "Cannot assign nullptr to a smart pointer that doesn't allow null");
-				AssignContainer(new ContainerType(value));
+				AssignContainer(new ContainerType());
+				Value = value;
 			}
 		}
 	
+		return *this;
+	}
+
+	inline ThisType& operator=(std::nullptr_t) {
+		SF_ASSERT(AllowNull, "Cannot assign nullptr to a shared pointer type that doesn't allow null");
+		Release();
 		return *this;
 	}
 
@@ -293,31 +331,49 @@ public:
 	}
 
 	inline bool operator==(T* value) const {
-		if (Container) {
-			return Container->value == value;
-		}
-
-		return value == nullptr;
+		return value == Value;
 	}
 
-	//template<typename Subclass>
-	//requires(std::is_base_of_v<T, Subclass>)
-	//inline operator SFObjectLink<Subclass, Threadsafe, StrongLink, AllowNull>() {
-	//	SFObjectLink<Subclass, Threadsafe, StrongLink, AllowNull> ptr;
-	//	ptr.AssignContainer(Container);
-	//	return ptr;
-	//}
+	template<typename To>
+	requires(std::derived_from<To, T> || std::derived_from<T, To>)
+	inline SFObjectLink<To, Threadsafe, StrongLink, false> Cast() {
+		To* Casted = dynamic_cast<To*>(Value);
+		if (Casted) {
+			SFObjectLink<To, Threadsafe, StrongLink, false> Ptr;
+			Ptr.AssignContainer(Container);
+			Ptr.Value = Casted;
+			return Ptr;
+		} else {
+			return SFObjectLink<To, Threadsafe, StrongLink, false>();
+		}
+	}
 
 	inline operator bool() {
-		return Container != nullptr;
+		return Value != nullptr;
 	}
 
 	inline operator T* () {
 		return Get();
 	}
+
+	inline int StrongCount() const {
+		if (Container) {
+			return Container->StrongRefCount;
+		}
+
+		return -1;
+	}
+
+	inline int WeakCount() const {
+		if (Container) {
+			return Container->WeakReferences.size();
+		}
+
+		return -1;
+	}
 };
 
-template<typename T, bool Threadsafe>
+template<typename T, bool Threadsafe = false>
 class SharedFromThis {
 	friend SFObjectLink;
 
@@ -326,18 +382,20 @@ public:
 	~SharedFromThis() = default;
 
 private:
-	SFObjectContainer<T, Threadsafe>* Container = nullptr;
+	SFObjectContainer<Threadsafe>* Container = nullptr;
 
 public:
 	inline SFSharedPtr<T, Threadsafe> AsShared() {
 		if (Container) {
 			SFSharedPtr<T, Threadsafe> ptr;
 			ptr.AssignContainer(Container);
+			ptr.Value = static_cast<T*>(this);
 			return ptr;
 		} else {
 			SFSharedPtr<T, Threadsafe> ptr;
-			ptr.AssignContainer(new SFObjectContainer<T, Threadsafe>(static_cast<T*>(this)));
+			ptr.AssignContainer(new SFObjectContainer<Threadsafe>());
 			Container = ptr.Container;
+			ptr.Value = static_cast<T*>(this);
 			return ptr;
 		}
 	}

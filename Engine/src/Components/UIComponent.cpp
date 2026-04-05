@@ -30,7 +30,7 @@ void UIComponent::Tick(float DeltaTime) {
 void UIComponent::Initialize() {
 	Component::Initialize();
 
-	EnableTick();
+	EnableTick(TickStage::GUI);
 	UI = new UIRoot(GetGameInstance()->GetRenderer());
 	//UI->AddElement<UIImage>();
 	auto text = UI->AddElement<UIText>();

@@ -14,8 +14,6 @@ void Game::Serialize(SerializedAsset& asset) {
 	asset.SetAssetType<Game>();
 }
 
-Camera cam;
-
 void Game::Initialize() {
 	GetRenderer().Init();
 
@@ -27,10 +25,6 @@ void Game::Initialize() {
 }
 
 void Game::Step() {
-
-	for (int i = 0; i < Scenes.size(); ++i) {
-		Scenes[i]->Render(cam);
-	}
 	GetTickManager().Tick();
 
 	for (int i = 0; i < Windows.size(); ++i) {

@@ -36,16 +36,20 @@ void SFObject::SetName(const char* NewName) {
 	memcpy(name, NewName, size);
 }
 
-void SFObject::EnableTick() {
-	if (UsingTick) return;
+void SFObject::EnableTick(TickStage stage) {
+	if (UsingTick) {
+		SF_ENSURE(stage == UsingTickStage, "Trying to enable tick while tick is already enabled and attempting to use a different tick stage");
+		return;
+	}
 
-	GetGameInstance()->GetTickManager().RegisterTick(this, [this](float DeltaTime) { Tick(DeltaTime); });
+	GetGameInstance()->GetTickManager().RegisterTick(this, [this](float DeltaTime) { Tick(DeltaTime); }, stage);
 	UsingTick = true;
+	UsingTickStage = stage;
 }
 
 void SFObject::DisableTick() {
 	if (!UsingTick) return;
 
-	GetGameInstance()->GetTickManager().UnregisterTick(this);
+	GetGameInstance()->GetTickManager().UnregisterTick(this, UsingTickStage);
 	UsingTick = false;
 }

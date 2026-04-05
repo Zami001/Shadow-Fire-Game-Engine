@@ -7,6 +7,10 @@ Component::Component() : AttachedTo(nullptr) {}
 
 Component::~Component() {}
 
+void Component::AttachTo(GameObject* object) {
+
+}
+
 Scene* Component::GetScene() const {
 	return AttachedTo->GetScene();
 }

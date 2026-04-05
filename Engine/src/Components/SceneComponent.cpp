@@ -2,7 +2,7 @@
 
 AssetType<SceneComponent> assetType;
 
-SceneComponent::SceneComponent() : Visible(false), Parent(nullptr) {}
+SceneComponent::SceneComponent() : Visible(false), Parent(nullptr), Subcomponents() {}
 
 SceneComponent::~SceneComponent() {}
 
