@@ -64,15 +64,13 @@ void EditorGame::CreateInitialScene() {
 		ScopedProfiler Profiler("Mesh loading");
 		MeshImporter importer(GetGameInstance()->GetRenderer());
 		
-		//importer.ImportFile("C:\\Shadow Fire Game Engine\\Third Party\\assimp-5.2.5\\test\\models\\FBX\\animation_with_skeleton.fbx" , *mesh); //
-		importer.ImportFile("C:\\Users\\Rune_\\Desktop\\Sample SF Project\\Content\\Bug\\Basic Bug_4.fbx", ImportedMesh);
-		//importer.ImportFile("C:\\Users\\Rune_\\Desktop\\Sample SF Project\\Content\\teapot.fbx", mesh->GetVertexBuffer());
+		importer.ImportFile("Test Assets\\Bug\\Basic Bug_4.fbx", ImportedMesh);
 	}
 
 	//mesh->GetSkeleton()->GenerateAnimatedDebugMesh(debugMesh->GetVertexBuffer(), 0);
 
 	SFSharedRef<Texture2D> diffuseTex = GetGameInstance()->GetRenderer().CreateTexture2D();
-	diffuseTex->LoadFile("C:\\Users\\Rune_\\Desktop\\Sample SF Project\\Content\\Bug\\BBug_Texture.png");
+	diffuseTex->LoadFile("Test Assets\\Bug\\BBug_Texture.png");
 
 	mat->Textures.push_back(diffuseTex);
 

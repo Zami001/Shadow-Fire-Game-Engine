@@ -18,8 +18,6 @@ void Scene::Serialize(SerializedAsset& asset) {
 void Scene::Render(const Camera& camera) {
 	GetGameInstance()->GetRenderer().BeginRender(camera);
 
-	SF_LOG(Test, Log, "Scene: %s", this->name);
-
 	for (int i = 0; i < objects.size(); ++i) {
 		objects[i]->Render(camera);
 	}

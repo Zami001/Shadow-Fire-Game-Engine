@@ -15,14 +15,7 @@ public:
 	std::vector<SFSharedRef<SceneComponent>> Subcomponents;
 	Transform transform;
 	
-	virtual void Render(const Camera& camera, const Matrix4x4& worldMatrix) {
-		SF_LOG(Test, Log, "Render: %s", this->GetName());
-
-		for (SFSharedRef<SceneComponent>& component : Subcomponents) {
-			SF_LOG(Test, Log, "Subcomponent: %s", component->GetName());
-			component->Render(camera, worldMatrix * component->transform.GetLocalMatrix());
-		}
-	}
+	virtual void Render(const Camera& camera, const Matrix4x4& worldMatrix);
 
 	SceneComponent* GetParent() const { return Parent; }
 	void SetParent(SceneComponent* parent);

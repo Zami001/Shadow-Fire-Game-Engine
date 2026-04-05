@@ -2,7 +2,7 @@
 
 AssetType<SceneComponent> assetType;
 
-SceneComponent::SceneComponent() : Visible(false), Parent(nullptr), Subcomponents() {}
+SceneComponent::SceneComponent() : Visible(true), Parent(nullptr), Subcomponents() {}
 
 SceneComponent::~SceneComponent() {}
 
@@ -13,6 +13,14 @@ void SceneComponent::Serialize(SerializedAsset& asset) {
 
 	SERIALIZE_SUBOBJECT_COLLECTION(asset, Subcomponents);
 	SERIALIZE_OBJECT_REF(asset, Parent);
+}
+
+void SceneComponent::Render(const Camera& camera, const Matrix4x4& worldMatrix) {
+	if (Visible) {
+		for (SFSharedRef<SceneComponent>& component : Subcomponents) {
+			component->Render(camera, worldMatrix * component->transform.GetLocalMatrix());
+		}
+	}
 }
 
 void SceneComponent::SetParent(SceneComponent* NewParent) {
