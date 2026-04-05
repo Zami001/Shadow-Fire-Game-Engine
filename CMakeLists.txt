@@ -116,10 +116,11 @@ endif()
 add_subdirectory( "Third Party" )
 
 # Include sub-projects.
-add_subdirectory ( Core )
-add_subdirectory ( Rendering )
-add_subdirectory ( Engine )
-add_subdirectory ( DX11Renderer )
+add_subdirectory( Core )
+add_subdirectory( Rendering )
+add_subdirectory( Engine )
+add_subdirectory( DX11Renderer )
+add_subdirectory( Audio )
 
 #OpenGL has been temporarily abanadoned and as a result is heavily broken. not adding the subdirectory so that tests will continue to build properly
 #add_subdirectory ( OpenGLRenderer )
