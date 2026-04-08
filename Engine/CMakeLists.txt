@@ -13,10 +13,12 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "Source" FILES ${SRC_
 
 add_dependencies( Engine Rendering )
 add_dependencies( Engine Core )
+add_dependencies( Engine Audio )
 
 target_link_libraries ( Engine
 	Rendering
 	Core
+	Audio
 )
 
 add_subdirectory( tests )

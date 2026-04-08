@@ -39,4 +39,5 @@ set(MSDFGEN_USE_SKIA OFF)
 set(ASSIMP_BUILD_ZLIB FALSE)
 add_subdirectory( "assimp-5.3.1" )
 
-add_subdirectory( "miniaudio" )
+#set(MINIAUDIO_FORCE_CXX True)
+#add_subdirectory( "miniaudio" )

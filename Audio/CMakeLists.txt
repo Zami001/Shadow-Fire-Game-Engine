@@ -14,9 +14,4 @@ add_dependencies( Audio Core )
 
 target_link_libraries( Audio
 	PUBLIC Core
-	PRIVATE miniaudio
-)
-
-target_link_libraries( Audio
-	PUBLIC miniaudio
 )

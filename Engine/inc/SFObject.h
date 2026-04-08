@@ -17,8 +17,8 @@ class Scene;
 template<typename T>
 concept PlainObject = requires(T val) {
 	requires std::is_base_of_v<SFObject, T>;
-	requires !std::is_base_of_v<GameObject, T>;
 	requires !std::is_base_of_v<Component, T>;
+	requires !std::is_same_v<GameObject, T>;
 };
 
 class ENGINE_API SFObject : public SharedFromThis<SFObject> {

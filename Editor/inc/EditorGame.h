@@ -14,6 +14,7 @@ public:
 	std::vector<Game*> ProjectGames;
 
 	virtual void Initialize() override;
+	virtual void Shutdown() override;
 	virtual void Serialize(SerializedAsset& asset) override;
 	virtual RenderPipeline& GetRenderer() override;
 	virtual void CreateInitialScene() override;

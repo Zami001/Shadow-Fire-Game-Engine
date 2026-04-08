@@ -1,6 +1,5 @@
 #include <EditorGame.h>
 #include <Application.h>
-#include <windows.h>
 
 #include <Components/StaticMeshComponent.h>
 #include <Components/SkeletalMeshComponent.h>
@@ -13,7 +12,9 @@
 #include <Components/UIComponent.h>
 #include <Components/CameraComponent.h>
 
-#include <Font.h>
+#include <AudioEngine.h>
+#include <Sources/AudioTone.h>
+#include <Math/Random.h>
 
 void EditorGame::Initialize() {
 	Game::Initialize();
@@ -34,6 +35,14 @@ void EditorGame::Initialize() {
 	//if (!ActiveProject.GetProjectLoaded()) {
 	//	ActiveProject.CreateProject();
 	//}
+}
+
+AudioEngine audioEngine;
+
+void EditorGame::Shutdown() {
+	Game::Shutdown();
+
+	audioEngine.ShutdownAudio();
 }
 
 void EditorGame::Serialize(SerializedAsset& asset) {
@@ -87,22 +96,22 @@ void EditorGame::CreateInitialScene() {
 
 
 	//GetGameInstance()->GetTickManager().RegisterTick(obj.Get(), [meshcomp, debugMesh, ImportedMesh, animIndex](float deltatime) mutable {
-		//InputManager& inputManager = instance->GetWindows()[0]->GetInputManager();
-		//if (inputManager.GetButtonDown(Keycode::RightArrow)) {
-		//	meshcomp->transform.Translate({ deltatime, 0, 0 });
-		//}
-		//
-		//if (inputManager.GetButtonDown(Keycode::LeftArrow)) {
-		//	meshcomp->transform.Translate({ -deltatime, 0, 0 });
-		//}
-		//meshcomp->transform.Translate({ deltatime, 0, 0 });
-		
-		
-		//meshcomp->transform.Rotate(Quaternion(Vector3(0, deltatime, 0)));
-
-		//target.Meshes[0]->GetSkeleton()->GenerateDebugMesh(debugMesh->GetVertexBuffer());
-		//target.Meshes[0]->GetSkeleton()->GenerateAnimatedDebugMesh(debugMesh->GetVertexBuffer(), timer);
-		//meshcomp->transform.Rotate({ 0, Math::TAU * 100, 0 });
+	//	InputManager& inputManager = instance->GetWindows()[0]->GetInputManager();
+	//	if (inputManager.GetButtonDown(Keycode::RightArrow)) {
+	//		meshcomp->transform.Translate({ deltatime, 0, 0 });
+	//	}
+	//	
+	//	if (inputManager.GetButtonDown(Keycode::LeftArrow)) {
+	//		meshcomp->transform.Translate({ -deltatime, 0, 0 });
+	//	}
+	//	meshcomp->transform.Translate({ deltatime, 0, 0 });
+	//	
+	//	
+	//	meshcomp->transform.Rotate(Quaternion(Vector3(0, deltatime, 0)));
+	//
+	//	target.Meshes[0]->GetSkeleton()->GenerateDebugMesh(debugMesh->GetVertexBuffer());
+	//	target.Meshes[0]->GetSkeleton()->GenerateAnimatedDebugMesh(debugMesh->GetVertexBuffer(), timer);
+	//	meshcomp->transform.Rotate({ 0, Math::TAU * 100, 0 });
 	//});
 
 	//TimedProfiler fpsTracker("FPS");
@@ -121,6 +130,15 @@ void EditorGame::CreateInitialScene() {
 	//	scene->Serialize(testasset);
 	//}
 
-	//Font font;
-	//font.test();
+	audioEngine.InitAudio();
+	audioEngine.StartAudio();
+
+	static AudioTone Tone;
+	Tone.PlayAudio(&audioEngine);
+
+	GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Add([](Keycode Key, ButtonState State) {
+		if (Key == Keycode::Space && State == ButtonState::Down) {
+			Tone.SetFrequency((Random::GetInt64() % 1000) + 100);
+		}
+	});
 }
