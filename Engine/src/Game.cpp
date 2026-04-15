@@ -22,10 +22,15 @@ void Game::Initialize() {
 	//winParams.size = {2560, 1440};
 	//winParams.style = WindowStyle::Borderless;
 	Windows.push_back(GetRenderer().CreateWindow(winParams));
+
+	if (audioEngine.InitAudio()) {
+		audioEngine.StartAudio();
+	}
 }
 
 void Game::Step() {
 	GetTickManager().Tick();
+	audioEngine.Update();
 
 	for (int i = 0; i < Windows.size(); ++i) {
 		Windows[i]->Present();
@@ -44,6 +49,7 @@ void Game::Step() {
 void Game::Shutdown() {
 	Scenes.clear();
 
+	audioEngine.ShutdownAudio();
 	GetRenderer().Shutdown();
 }
 

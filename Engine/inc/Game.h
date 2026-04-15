@@ -5,6 +5,7 @@
 #include <Scene.h>
 #include <TickManager.h>
 #include <MinimalCore.h>
+#include <AudioEngine.h>
 
 class ENGINE_API Game : public SFObject {
 protected:
@@ -31,13 +32,10 @@ private:
 	TickManager tickManager;
 	std::vector<SFSharedRef<Scene>> Scenes;
 	std::vector<SFSharedPtr<Window>> Windows;
+	AudioEngine audioEngine;
 
 public:
-	inline TickManager& GetTickManager() {
-		return tickManager;
-	}
-
-	inline const std::vector<SFSharedRef<Scene>>& GetScenes() {
-		return Scenes;
-	}
+	inline TickManager& GetTickManager() { return tickManager; }
+	inline const std::vector<SFSharedRef<Scene>>& GetScenes() { return Scenes; }
+	inline AudioEngine& GetAudioEngine() { return audioEngine; }
 };

@@ -1,24 +1,28 @@
-#include <Sources/AudioTone.h>
+#include <Sources/AudioWaveform.h>
 
-void AudioTone::SetFrequency(unsigned long long NewFrequency) {
+void AudioWaveform::SetAmplitude(float NewAmplitude) {
+    Amplitude = NewAmplitude;
+}
+
+void AudioWaveform::SetFrequency(unsigned long long NewFrequency) {
     Frequency = NewFrequency;
 }
 
-void AudioTone::ProcessAudio(ma_device* pDevice, void* pOutput, ma_uint32 frameCount) {
+void AudioWaveform::ProcessAudio(ma_device* pDevice, void* pOutput, ma_uint32 frameCount) {
     switch (Type) {
-        case ToneType::Sine:
+        case Waveform::Sine:
             WriteToOutput(SineWave, pDevice, pOutput, frameCount);
             break;
 
-        case ToneType::Square:
+        case Waveform::Square:
             WriteToOutput(SquareWave, pDevice, pOutput, frameCount);
             break;
 
-        case ToneType::Sawtooth:
+        case Waveform::Sawtooth:
             WriteToOutput(SawtoothWave, pDevice, pOutput, frameCount);
             break;
 
-        case ToneType::Triangle:
+        case Waveform::Triangle:
             WriteToOutput(TriangleWave, pDevice, pOutput, frameCount);
             break;
     }

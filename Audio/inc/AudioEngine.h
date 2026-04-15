@@ -1,11 +1,12 @@
 #pragma once
 
 #include <Audio.h>
-//#include <miniaudio.h>
-#include <Sources/AudioSource.h>
 #include <MinimalCore.h>
 #include <vector>
+#include <miniaudio.h>
 #include <concurrent_queue.h>
+
+class AudioSource;
 
 class AUDIO_API AudioEngine {
 	friend AudioSource;
@@ -26,6 +27,7 @@ public:
 
 private:
 	ma_device device;
+	ma_engine engine;
 
 	std::vector<AudioSource*> PlayingAudioSources;
 	concurrency::concurrent_queue<AudioSource*> QueuedAudioSources;

@@ -13,8 +13,10 @@
 #include <Components/CameraComponent.h>
 
 #include <AudioEngine.h>
-#include <Sources/AudioTone.h>
+#include <Sources/AudioWaveform.h>
+#include <Sources/AudioClip.h>
 #include <Math/Random.h>
+#include <Components/AudioSourceComponent.h>
 
 void EditorGame::Initialize() {
 	Game::Initialize();
@@ -37,12 +39,8 @@ void EditorGame::Initialize() {
 	//}
 }
 
-AudioEngine audioEngine;
-
 void EditorGame::Shutdown() {
 	Game::Shutdown();
-
-	audioEngine.ShutdownAudio();
 }
 
 void EditorGame::Serialize(SerializedAsset& asset) {
@@ -64,6 +62,7 @@ void EditorGame::CreateInitialScene() {
 	obj->AddComponent<CameraComponent>();
 	auto meshcomp = obj->AddComponent<SkeletalMeshComponent>();
 	obj->AddComponent<UIComponent>();
+	auto audioComp = obj->AddComponent<AudioSourceComponent>();
 
 	SFSharedPtr<Mesh> debugMesh = GetGameInstance()->GetRenderer().CreateMesh();
 	SFSharedPtr<Material> mat = GetGameInstance()->GetRenderer().GetDefaultMaterial();
@@ -130,15 +129,12 @@ void EditorGame::CreateInitialScene() {
 	//	scene->Serialize(testasset);
 	//}
 
-	audioEngine.InitAudio();
-	audioEngine.StartAudio();
+	audioComp->LoadAudio("Test assets\\Bloop.wav");
 
-	static AudioTone Tone;
-	Tone.PlayAudio(&audioEngine);
-
-	GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Add([](Keycode Key, ButtonState State) {
+	GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Add([audioComp](Keycode Key, ButtonState State) mutable {
 		if (Key == Keycode::Space && State == ButtonState::Down) {
-			Tone.SetFrequency((Random::GetInt64() % 1000) + 100);
+			//Tone.SetFrequency((Random::GetInt64() % 1000) + 100);
+			audioComp->PlayAudio();
 		}
 	});
 }

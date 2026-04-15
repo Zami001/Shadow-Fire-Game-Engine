@@ -6,9 +6,18 @@
 
 class AUDIO_API AudioClip : public AudioSource {
 public:
-	AudioClip() = default;
-	~AudioClip() = default;
+	AudioClip();
+	~AudioClip();
+
+	bool LoadAudio(const char* file, AudioEngine& Engine);
 
 protected:
 	virtual void ProcessAudio(ma_device* pDevice, void* pOutput, ma_uint32 frameCount) override;
+	virtual void PrePlay(AudioEngine& Engine) override;
+
+private:
+	//ma_decoder decoder;
+	ma_sound sound;
+
+	static void OnSoundEnded(void* pUserData, ma_sound* pSound);
 };
