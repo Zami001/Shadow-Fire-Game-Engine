@@ -3,10 +3,14 @@
 #include <Font.h>
 
 void RenderPipeline::Init() {
+	SF_LOG(Render Pipeline, Log, "Render pipeline initializing");
+
 	Font::InitializeFreeType();
 }
 
 void RenderPipeline::Shutdown() {
+	SF_LOG(Render Pipeline, Log, "Render pipeline shuting down");
+
 	Font::DeinitializeFreeType();
 }
 

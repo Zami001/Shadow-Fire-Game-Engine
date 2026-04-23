@@ -22,10 +22,12 @@ set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 option( SF_USE_ASSERTS "Use asserts while running shadow fire functions" True )
 option( SF_EDITOR "True to compile shadow fire editor" True )
 option( BUILD_SHARED_LIBS "True to compile dll modules, false to compile static libraries" True )
+option( SF_DEBUG "Compile with debug code retained" True )
 
 add_definitions(
     -DSF_USE_ASSERTS=$<BOOL:${SF_USE_ASSERTS}>
     -DSF_EDITOR=$<BOOL:${SF_EDITOR}>
+    -DSF_DEBUG=$<BOOL:${SF_DEBUG}>
 )
 
 include(CMakePackageConfigHelpers)

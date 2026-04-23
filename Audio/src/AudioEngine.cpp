@@ -30,6 +30,8 @@ void AudioEngine::ProcessAudio(ma_device* pDevice, void* pOutput, const void* pI
 }
 
 bool AudioEngine::InitAudio() {
+    SF_LOG(Audio, Log, "Audio initializing");
+
     ma_device_config config = ma_device_config_init(ma_device_type_playback);
     config.playback.format = ma_format_f32;     // Set to ma_format_unknown to use the device's native format.
     config.playback.channels = 0;               // Set to 0 to use the device's native channel count.
@@ -53,6 +55,8 @@ bool AudioEngine::InitAudio() {
 }
 
 void AudioEngine::ShutdownAudio() {
+    SF_LOG(Audio, Log, "Audio shutting down");
+
     ma_device_uninit(&device);
     ma_engine_uninit(&engine);
 }

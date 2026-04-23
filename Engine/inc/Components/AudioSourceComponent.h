@@ -15,6 +15,9 @@ public:
 
 	void LoadAudio(const char* File);
 
+	void SetLooping(bool loop);
+	bool IsLooping() const;
+
 protected:
 	virtual void Initialize() override;
 	//virtual void Tick(float DeltaTime) override;

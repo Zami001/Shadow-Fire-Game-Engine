@@ -68,7 +68,7 @@ bool MeshImporter::ConvertData(ImportedMeshAsset& target, const char* data, size
 		}
 
 		if (scene->mMeshes[0]->HasTextureCoords(1)) {
-			SF_LOG(Mesh Importer, Warning, "Currently unable to import more than 1 UV channel")
+			SF_LOG(Mesh Import, Warning, "Currently unable to import more than 1 UV channel")
 		}
 	}
 
@@ -224,7 +224,7 @@ bool MeshImporter::ConvertData(ImportedMeshAsset& target, const char* data, size
 
 					if (Unfound) {
 						// todo: remove or move this warning, it is extremely porformance heavy to find
-						SF_LOG(Mesh Importer, Warning, "Loaded animation contains a bone that is not recognised: %s", scene->mAnimations[AnimNumber]->mChannels[channel]->mNodeName.C_Str())
+						SF_LOG(Mesh Import, Warning, "Loaded animation contains a bone that is not recognised: %s", scene->mAnimations[AnimNumber]->mChannels[channel]->mNodeName.C_Str())
 					}
 
 					SkeletalAnimation::BoneKeys Keys;
@@ -253,7 +253,7 @@ bool MeshImporter::ConvertData(ImportedMeshAsset& target, const char* data, size
 						// check if its the root bone
 						if (scene->mAnimations[AnimNumber]->mChannels[channel]->mNodeName == scene->mMeshes[0]->mBones[0]->mArmature->mName) {
 							Keys.Scales.emplace_back(ScaleKey.mTime, Vector3(1, 1, 1));
-							SF_LOG(LogTest, Log, "Replacing bone scale animation of bone %s: %s with %s", scene->mMeshes[0]->mBones[0]->mNode->mName.C_Str(), vec.ToString().c_str(), Vector3(1, 1, 1).ToString().c_str())
+							SF_LOG(Mesh Import, VeryVerbose, "Replacing bone scale animation of bone %s: %s with %s", scene->mMeshes[0]->mBones[0]->mNode->mName.C_Str(), vec.ToString().c_str(), Vector3(1, 1, 1).ToString().c_str())
 						} else {
 							Keys.Scales.emplace_back(ScaleKey.mTime, vec);
 						}
@@ -270,7 +270,7 @@ bool MeshImporter::ConvertData(ImportedMeshAsset& target, const char* data, size
 	delete[] vertData;
 	delete[] BoneWeights;
 
-	SF_LOG(Mesh Import, Log, "Mesh file imported: verts - %i, indices - %i", scene->mMeshes[0]->mNumVertices, indices.size())
+	SF_LOG(Mesh Import, Verbose, "Mesh file imported: verts - %i, indices - %i", scene->mMeshes[0]->mNumVertices, indices.size())
 
 	return true;
 }

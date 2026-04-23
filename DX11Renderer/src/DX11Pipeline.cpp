@@ -32,7 +32,7 @@ void DX11Pipeline::Init() {
 
 	UINT deviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
-#if defined(DEBUG) || defined(_DEBUG)
+#if SF_DEBUG
 	deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -152,6 +152,7 @@ void DX11Pipeline::Shutdown() {
 
 	DefaultMaterial = nullptr;
 	ErrorMaterial = nullptr;
+	DefaultTextMaterial = nullptr;
 	ImageFactory.Reset();
 	
 	CoUninitialize();
@@ -161,11 +162,22 @@ void DX11Pipeline::Shutdown() {
 	rasterizer.Reset();
 	context.Reset();
 	device.Reset();
+	BlendState.Reset();
 
-#if defined(DEBUG) || defined(_DEBUG)
+#if SF_DEBUG
 	IDXGIDebug* debugDev;
 	HRESULT hr = DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debugDev));
-	debugDev->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+	if (hr != S_OK) {
+		SF_LOG(Render Pipeline, Error, "Failed to get debug interface during dx11 render pipeline shutdown");
+		return;
+	}
+
+	hr = debugDev->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+	if (hr == S_OK) {
+		SF_LOG(Render Pipeline, Log, "Render pipeline shutdown successful");
+	} else {
+		SF_LOG(Render Pipeline, Error, "Live objected reported by directx debug interface during render pipeline shutdown");
+	}
 #endif
 }
 

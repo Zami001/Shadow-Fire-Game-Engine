@@ -4,7 +4,11 @@ AudioClip::AudioClip() : AudioSource(false) {
 }
 
 AudioClip::~AudioClip() {
-	SF_LOG(Audio, Warning, "Sound has been deleted");
+#if SF_DEBUG
+	SF_LOG(Audio, Verbose, "Sound has been deleted: %s", Filename.c_str());
+#else
+	SF_LOG(Audio, Verbose, "Sound has been deleted");
+#endif
 	//ma_decoder_uninit(&decoder);
 	//ma_sound_uninit(&sound);
 }
@@ -25,7 +29,11 @@ void AudioClip::PrePlay(AudioEngine& Engine) {
 	//ma_decoder_init_file("Test Assets/Bloop.wav", &config, &decoder);
 	
 	if (Playing || sound.pDataSource != nullptr) {
-		SF_LOG(Audio, Warning, "Sound is already playing");
+#if SF_DEBUG
+		SF_LOG(Audio, VeryVerbose, "Seeking to start: %s", Filename.c_str());
+#else
+		SF_LOG(Audio, VeryVerbose, "Seeking to start");
+#endif
 		ma_sound_seek_to_pcm_frame(&sound, 0);
 		//return;
 	} else {
@@ -42,12 +50,35 @@ void AudioClip::PrePlay(AudioEngine& Engine) {
 }
 
 bool AudioClip::LoadAudio(const char* file, AudioEngine& Engine) {
-	return ma_sound_init_from_file(&GetEngine(Engine), file, 0, NULL, NULL, &sound) != MA_SUCCESS;
+	bool result = ma_sound_init_from_file(&GetEngine(Engine), file, 0, NULL, NULL, &sound) != MA_SUCCESS;
+
+	if (!result) {
+#if SF_DEBUG
+		Filename = file;
+#endif
+	
+		SF_LOG(Audio, Verbose, "Sound file loaded: %s", file);
+	}
+
+	return result;
+}
+
+bool AudioClip::IsLooping() const {
+	return ma_sound_is_looping(&sound);
+}
+
+void AudioClip::SetLooping(bool loop) {
+	ma_sound_set_looping(&sound, loop);
 }
 
 void AudioClip::OnSoundEnded(void* pUserData, ma_sound* pSound) {
 	AudioClip* Self = static_cast<AudioClip*>(pUserData);
 	Self->Playing = false;
 	ma_sound_stop(pSound);
-	SF_LOG(Audio, Warning, "Sound has ended");
+	
+#if SF_DEBUG
+	SF_LOG(Audio, VeryVerbose, "Sound has ended: %s", Self->Filename.c_str());
+#else
+	SF_LOG(Audio, VeryVerbose, "Sound has ended");
+#endif
 }

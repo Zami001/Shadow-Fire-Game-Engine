@@ -17,6 +17,9 @@ public:
 	void PlayAudio(AudioEngine& Engine);
 	void StopAudio();
 
+	virtual void SetLooping(bool loop);
+	virtual bool IsLooping() const { return false; }
+
 private:
 	bool IsRawStream;
 

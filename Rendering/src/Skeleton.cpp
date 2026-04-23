@@ -157,7 +157,6 @@ void Skeleton::SetupSkeleton(Bone& NewRootBone) {
 	Matrix4x4 outRot;
 	Vector3 outTranslation, outScale;
 	NewRootBone.Transformation.ExtractTransformComponents(outTranslation, outScale, outRot);
-	SF_LOG(LogTest, Log, "%s", outScale.ToString().c_str())
 
 	NumBones = count;
 }

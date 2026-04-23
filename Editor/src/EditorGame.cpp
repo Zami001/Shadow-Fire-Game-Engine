@@ -130,6 +130,7 @@ void EditorGame::CreateInitialScene() {
 	//}
 
 	audioComp->LoadAudio("Test assets\\Bloop.wav");
+	audioComp->SetLooping(true);
 
 	GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Add([audioComp](Keycode Key, ButtonState State) mutable {
 		if (Key == Keycode::Space && State == ButtonState::Down) {

@@ -15,6 +15,8 @@ void Game::Serialize(SerializedAsset& asset) {
 }
 
 void Game::Initialize() {
+	SF_LOG(Game, Log, "Game initializing");
+
 	GetRenderer().Init();
 
 	WindowParams winParams;
@@ -47,6 +49,8 @@ void Game::Step() {
 }
 
 void Game::Shutdown() {
+	SF_LOG(Game, Log, "Game shuting down");
+
 	Scenes.clear();
 
 	audioEngine.ShutdownAudio();

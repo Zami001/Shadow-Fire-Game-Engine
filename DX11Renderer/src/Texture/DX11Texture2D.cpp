@@ -141,10 +141,6 @@ DXGI_FORMAT TextureFormatToDXGI(TextureFormat pixelFormat) {
 	return DXGI_FORMAT_UNKNOWN;
 }
 
-
-
-
-
 DXGI_FORMAT WICToDXGI(WICPixelFormatGUID pixelFormat) {
 	for (size_t i = 0; i < _countof(g_WICFormats); ++i) {
 		if (memcmp(&g_WICFormats[i].wic, &pixelFormat, sizeof(GUID)) == 0)
@@ -279,7 +275,10 @@ void DX11Texture2D::SubmitRawData(const void* data, TextureFormat format, size_t
 
 	uint32_t support = 0;
 	HRESULT result = DX11Pipeline::device->CheckFormatSupport(dxFormat, &support);
-	std::cout << result << std::endl;
+	if (result != S_OK) {
+		SF_LOG(Texture, Error, "Texture format is unsupported");
+		return;
+	}
 
 	Width = width;
 	Height = height;
@@ -305,6 +304,10 @@ void DX11Texture2D::SubmitRawData(const void* data, TextureFormat format, size_t
 	initData.SysMemSlicePitch = bytesPerPixel * width * height; //static_cast<uint32_t>(imageSize);
 
 	result = DX11Pipeline::device->CreateTexture2D(&desc, &initData, &tex);
+	if (result != S_OK) {
+		SF_LOG(Texture, Error, "Failed to create texture resource");
+		return;
+	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
 	resourceDesc.Format = dxFormat;
@@ -313,6 +316,10 @@ void DX11Texture2D::SubmitRawData(const void* data, TextureFormat format, size_t
 	resourceDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
 
 	result = DX11Pipeline::device->CreateShaderResourceView(tex.Get(), &resourceDesc, &SRV);
+	if (result != S_OK) {
+		SF_LOG(Texture, Error, "Failed to create shader resource view while creating texture");
+		return;
+	}
 
-	SF_LOG(Texture Import, Log, "Texture created from memory: size - %i x %i", Width, Height)
+	SF_LOG(Texture Import, Verbose, "Texture created from memory: size - %i x %i", Width, Height)
 }

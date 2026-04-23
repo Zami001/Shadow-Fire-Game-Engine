@@ -24,6 +24,14 @@ void AudioSourceComponent::LoadAudio(const char* File) {
 	Source = Clip;
 }
 
+void AudioSourceComponent::SetLooping(bool loop) {
+	Source->SetLooping(loop);
+}
+
+bool AudioSourceComponent::IsLooping() const {
+	return Source->IsLooping();
+}
+
 void AudioSourceComponent::Initialize() {
 	Component::Initialize();
 }
