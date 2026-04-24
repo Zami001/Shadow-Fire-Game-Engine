@@ -15,9 +15,11 @@ public:
 	void End();
 
 private:
+#if SF_PROFILING
 	std::chrono::time_point<std::chrono::steady_clock> start;
 	const char* taskname;
 	bool active = true;
 
 	void Print();
+#endif
 };

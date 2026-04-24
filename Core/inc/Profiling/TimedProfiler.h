@@ -12,7 +12,9 @@ public:
 	void Step();
 
 private:
+#if SF_PROFILING
 	const char* taskname;
 	uint32_t counter;
 	std::chrono::time_point<std::chrono::steady_clock> timer;
+#endif
 };

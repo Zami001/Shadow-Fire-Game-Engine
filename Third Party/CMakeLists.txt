@@ -12,6 +12,10 @@ set(MSDFGEN_USE_CPP11 OFF)
 set(MSDFGEN_INSTALL OFF)
 set(MSDFGEN_USE_VCPKG ON)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	message(FATAL_ERROR "Release builds currently broken due to failing to correctly find freetype dependency for msdfgen")
+endif()
+
 FetchContent_Declare(
 	msdf-atlas-gen
 	GIT_REPOSITORY https://github.com/Chlumsky/msdf-atlas-gen.git

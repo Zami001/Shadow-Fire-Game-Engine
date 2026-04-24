@@ -38,4 +38,5 @@ public:
 	inline TickManager& GetTickManager() { return tickManager; }
 	inline const std::vector<SFSharedRef<Scene>>& GetScenes() { return Scenes; }
 	inline AudioEngine& GetAudioEngine() { return audioEngine; }
+	inline SFSharedPtr<Window> GetPrimaryWindow() { return Windows[0]; }
 };

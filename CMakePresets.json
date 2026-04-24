@@ -9,10 +9,11 @@
   ],
   "configurePresets": [
     {
-      "name": "Base",
+      "name": "base",
       "description": "Base configuration to use for all build presets",
       "hidden": true,
       "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
       "architecture": {
         "value": "x64",
         "strategy": "external"
@@ -26,11 +27,32 @@
       }
     },
     {
-      "name": "Editor-Base",
+      "name": "debug-base",
+      "hidden": true,
+      "description": "Base configuration for debug builds",
+      "inherits": [ "base" ],
+      "cacheVariables": {
+        "SF_DEBUG": true,
+        "SF_PROFILING": true,
+        "SF_USE_ASSERTS": true,
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "release-base",
+      "hidden": true,
+      "description": "Base configuration for release builds",
+      "cacheVariables": {
+        "SF_DEBUG": false,
+        "SF_PROFILING": false,
+        "SF_USE_ASSERTS": false,
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "editor-base",
       "hidden": true,
       "description": "Base configuration for editor builds",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "inherits": [ "Base" ],
       "cacheVariables": {
         "SF_EDITOR": true
       }
@@ -38,20 +60,14 @@
     {
       "name": "editor-debug",
       "displayName": "Editor Debug",
-      "description": "Debug build using Ninja generator",
-      "inherits": "Editor-Base",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
+      "description": "Shadow fire editor with debug symbols and debug tools",
+      "inherits": [ "editor-base", "debug-base" ]
     },
     {
       "name": "editor-release",
       "displayName": "Editor Release",
-      "description": "Release build using Ninja generator",
-      "inherits": "Editor-Base",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-      }
+      "description": "Release build of the Shadow Fire editor",
+      "inherits": [ "editor-base", "release-base" ]
     }
   ]
 }
