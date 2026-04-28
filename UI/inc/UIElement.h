@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Rendering.h>
+#include <UI.h>
 #include <MinimalCore.h>
 #include <VertexBuffer.h>
 #include <Material.h>
 #include <Mesh.h>
-#include <UI/UIEventResponse.h>
+#include <UIEventResponse.h>
 #include <Input/Keycodes.h>
 
 class UIPanel;
 class UIRoot;
 
-class RENDERING_API UIElement : public SharedFromThis<UIElement, false> {
+class UI_API UIElement : public SharedFromThis<UIElement, false> {
 public:
 	friend UIPanel;
 	friend UIRoot;
@@ -21,6 +21,11 @@ public:
 		int Top = 0;
 		int Right = 0;
 		int Bottom = 0;
+	};
+
+	enum OverflowMode : char {
+		hidden,
+		visible
 	};
 
 	UIElement() = default;

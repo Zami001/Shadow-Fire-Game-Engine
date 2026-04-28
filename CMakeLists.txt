@@ -123,6 +123,7 @@ add_subdirectory( "Third Party" )
 # Include sub-projects.
 add_subdirectory( Core )
 add_subdirectory( Rendering )
+add_subdirectory( UI )
 add_subdirectory( Engine )
 add_subdirectory( DX11Renderer )
 add_subdirectory( Audio )

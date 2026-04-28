@@ -1,5 +1,5 @@
-#include <UI/UIText.h>
-#include <UI/Panels/UIRoot.h>
+#include <UIText.h>
+#include <Panels/UIRoot.h>
 #include <msdf-atlas-gen/msdf-atlas-gen.h>
 
 #include <cstdlib>

@@ -12,6 +12,7 @@
 #include <Logging/ConsoleLogger.h>
 #include <stacktrace>
 #include <DbgHelp.h>
+#include <Modules/ModuleManager.h>
 
 Application* Application::instance;
 
@@ -34,6 +35,8 @@ void Application::Run(Game& game) {
 	instance->Running = true;
 	instance->ActiveGame = &game;
 
+	ModuleManager::Get().ProgressLoadingPhase(ModuleManager::Default);
+
 	game.Initialize();
 	game.CreateInitialScene();
 
@@ -48,6 +51,8 @@ void Application::Run(Game& game) {
 	}
 
 	game.Shutdown();
+
+	ModuleManager::Get().ShutdownAllModules();
 }
 
 void Application::Shutdown() {

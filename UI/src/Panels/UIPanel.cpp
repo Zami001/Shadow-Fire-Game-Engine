@@ -1,4 +1,4 @@
-#include <UI/Panels/UIPanel.h>
+#include <Panels/UIPanel.h>
 
 void UIPanel::ParentUpdated() {
 	UIElement::ParentUpdated();

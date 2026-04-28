@@ -1,5 +1,5 @@
-#include <UI/UIImage.h>
-#include <UI/Panels/UIRoot.h>
+#include <UIImage.h>
+#include <Panels/UIRoot.h>
 #include <Texture/Texture2D.h>
 
 UIImage::UIImage() {

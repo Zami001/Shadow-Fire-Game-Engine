@@ -1,10 +1,10 @@
 #pragma once
 
-#include <UI/UIElement.h>
+#include <UIElement.h>
 #include <vector>
 #include <MinimalCore.h>
 
-class RENDERING_API UIPanel : public UIElement {
+class UI_API UIPanel : public UIElement {
 	friend void UIElement::SetParent(SFWeakPtr<UIPanel>);
 
 public:

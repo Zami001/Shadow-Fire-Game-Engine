@@ -1,9 +1,9 @@
 #pragma once
 
-#include <UI/UIElement.h>
+#include <UIElement.h>
 #include <Texture/Texture2D.h>
 
-class RENDERING_API UIImage : public UIElement {
+class UI_API UIImage : public UIElement {
 public:
 	UIImage();
 	~UIImage();

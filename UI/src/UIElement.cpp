@@ -1,5 +1,5 @@
-#include <UI/UIElement.h>
-#include <UI/Panels/UIPanel.h>
+#include <UIElement.h>
+#include <Panels/UIPanel.h>
 
 void UIElement::ParentUpdated() {
 	ParentRoot = Parent ? Parent->GetRoot() : nullptr;

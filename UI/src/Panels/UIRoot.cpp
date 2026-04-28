@@ -1,4 +1,4 @@
-#include <UI/Panels/UIRoot.h>
+#include <Panels/UIRoot.h>
 
 UIRoot::UIRoot(RenderPipeline& Pipeline) : pipeline(Pipeline) {
 	ParentRoot = this;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Components/Component.h>
-#include <UI/Panels/UIRoot.h>
+#include <Panels/UIRoot.h>
 
 class ENGINE_API UIComponent : public Component {
 public:

@@ -3,8 +3,8 @@
 #include <Application.h>
 
 // includes only for testing
-#include <UI/UIImage.h>
-#include <UI/UIText.h>
+#include <UIImage.h>
+#include <UIText.h>
 
 AssetType<UIComponent> assetType;
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <UI/Panels/UIPanel.h>
+#include <Panels/UIPanel.h>
 #include <RenderPipeline.h>
 
-class RENDERING_API UIRoot : public UIPanel {
+class UI_API UIRoot : public UIPanel {
 public:
 	UIRoot(RenderPipeline& Pipeline);
 	~UIRoot();

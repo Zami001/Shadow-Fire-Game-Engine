@@ -1,15 +1,16 @@
 #pragma once
 
-#include <Rendering.h>
+#include <UI.h>
 #include <Texture/Texture2D.h>
 #include <msdf-atlas-gen/msdf-atlas-gen.h>
+#include <RenderPipeline.h>
 
 namespace msdfgen {
 	class FreetypeHandle;
 }
 
-class RENDERING_API Font {
-	friend class RenderPipeline;
+class UI_API Font {
+	friend class UIModule;
 	friend class UIText;
 
 public:

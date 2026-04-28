@@ -1,5 +1,5 @@
-#include <UI/UIButton.h>
-#include <UI/UIImage.h>
+#include <UIButton.h>
+#include <UIImage.h>
 
 UIButton::UIButton() {
 }

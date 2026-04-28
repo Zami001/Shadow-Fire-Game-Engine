@@ -1,10 +1,10 @@
 #pragma once
 
-#include <UI/UIElement.h>
+#include <UIElement.h>
 #include <Texture/Texture2D.h>
 #include <Font.h>
 
-class RENDERING_API UIText : public UIElement {
+class UI_API UIText : public UIElement {
 public:
 	UIText();
 	~UIText();

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Rendering.h>
-#include <UI/Panels/UIPanel.h>
-#include <UI/UIImage.h>
+#include <UI.h>
+#include <Panels/UIPanel.h>
+#include <UIImage.h>
 
-class RENDERING_API UIButton : public UIPanel {
+class UI_API UIButton : public UIPanel {
 public:
 	UIButton();
 	~UIButton() = default;
