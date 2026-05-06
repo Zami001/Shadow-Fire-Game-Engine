@@ -2,9 +2,6 @@
 
 #include <DX11Pipeline.h>
 
-
-
-
 struct WICTranslate {
 	GUID                wic;
 	DXGI_FORMAT         format;
@@ -267,7 +264,7 @@ void DX11Texture2D::LoadFile(std::filesystem::path FilePath) {
 
 	result = DX11Pipeline::device->CreateShaderResourceView(tex.Get(), &resourceDesc, &SRV);
 
-	SF_LOG(Texture Import, Log, "Texture imported: size - %i x %i", Width, Height)
+	SF_LOG(Texture Import, Verbose, "Texture imported: size - %i x %i", Width, Height)
 }
 
 void DX11Texture2D::SubmitRawData(const void* data, TextureFormat format, size_t width, size_t height) {
@@ -292,7 +289,7 @@ void DX11Texture2D::SubmitRawData(const void* data, TextureFormat format, size_t
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0; // D3D11_RESOURCE_MISC_GENERATE_MIPS
 
