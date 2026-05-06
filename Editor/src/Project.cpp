@@ -231,29 +231,37 @@ void FindFiles(std::string& files, const std::filesystem::path& folder, char sep
 #include <fstream>
 
 void StringReplacement(const std::map<std::string, std::string*>& lookup, std::string& line) {
-	if (line.size() < 5) {
-		return;
-	}
+	size_t start = 0, end = 0;
 
-	size_t start = line.find("##");
+	do {
+		if (line.size() < 5) {
+			return;
+		}
 
-	if (start == ~0) {
-		return;
-	}
+		size_t start = line.find("##", start);
 
-	size_t end = line.find("##", start + 2);
+		if (start == ~0) {
+			return;
+		}
 
-	if (end == ~0) {
-		return;
-	}
+		size_t end = line.find("##", start + 2);
 
-	std::string key = line.substr(start + 2, end - start - 2);
+		if (end == ~0) {
+			SF_LOG(Project, Error, "Malformed string encountered while generating project template: %s", line.c_str());
+			return;
+		}
 
-	auto val = lookup.find(key);
-	if (val != lookup.end()) {
-		line.replace(start, end - start + 2, *val->second);
-		StringReplacement(lookup, line);
-	}
+		std::string key = line.substr(start + 2, end - start - 2);
+
+		auto val = lookup.find(key);
+		if (val != lookup.end()) {
+			line.replace(start, end - start + 2, *val->second);
+			start += val->second->size();
+		} else {
+			SF_LOG(Project, Warning, "Unknown replacement key encountered in project template: %s", key.c_str());
+			start = end + 2;
+		}
+	} while (end != ~0);
 }
 
 std::string& SwapChar(std::string& str, char OldChar, char NewChar) {
