@@ -9,9 +9,10 @@ void UIPanel::ParentUpdated() {
 	}
 }
 
-void UIPanel::RenderSubelement(SFSharedRef<UIElement>& Element, Bounds2Di Bounds, Vector2i Screensize) {
-	Element->Render(Bounds, Screensize);
+void UIPanel::RenderSubelement(SFSharedRef<UIElement>& Element, Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) {
+	Element->Render(Bounds, ClippingBounds, Screensize);
 	Element->LastBounds = Bounds;
+	Element->LastClippingBounds = Bounds;
 }
 
 bool UIPanel::RequiresInput() const {

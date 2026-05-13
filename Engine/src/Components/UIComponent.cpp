@@ -24,7 +24,7 @@ void UIComponent::Serialize(SerializedAsset& asset) {
 }
 
 void UIComponent::Tick(float DeltaTime) {
-	UI->Render(GetGameInstance()->GetWindows()[0]->GetSize(), GetGameInstance()->GetWindows()[0]->GetSize());
+	UI->Render(GetGameInstance()->GetWindows()[0]->GetSize(), GetGameInstance()->GetWindows()[0]->GetSize(), GetGameInstance()->GetWindows()[0]->GetSize());
 }
 
 void UIComponent::Initialize() {

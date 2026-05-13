@@ -11,9 +11,9 @@ UIEventResponse UIButton::OnMouseClick() {
 	return UIEventResponse::Handled;
 }
 
-void UIButton::Render(Bounds2Di Bounds, Vector2i Screensize) {
+void UIButton::Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) {
 	for (int i = 0; i < Subelements.size(); ++i) {
-		RenderSubelement(Subelements[i], Bounds, Screensize);
+		RenderSubelement(Subelements[i], Bounds, ClippingBounds, Screensize);
 	}
 }
 

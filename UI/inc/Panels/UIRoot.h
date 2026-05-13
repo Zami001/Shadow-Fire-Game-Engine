@@ -16,5 +16,5 @@ public:
 
 	inline RenderPipeline& GetRenderPipeline() const { return pipeline; }
 
-	virtual void Render(Bounds2Di Bounds, Vector2i Screensize) override;
+	virtual void Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) override;
 };

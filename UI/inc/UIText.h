@@ -21,7 +21,7 @@ public:
 	size_t CountLines(const std::wstring& str) const;
 
 protected:
-	virtual void Render(Bounds2Di Bounds, Vector2i Screensize) override;
+	virtual void Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) override;
 	virtual void Initialize() override;
 	virtual Vector2i GetDesiredSize() const override;
 

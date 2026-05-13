@@ -2,7 +2,6 @@
 #include <iostream>
 
 int Math_Vector(int argc, char** const arg) {
-	bool failed = false;
 	Vector<int, 3> vec1;
 	Vector<int, 3> vec2;
 	Vector<int, 3> result;
@@ -34,5 +33,5 @@ int Math_Vector(int argc, char** const arg) {
 		return 1;
 	};
 
-	return failed;
+	return 0;
 }

@@ -8,7 +8,8 @@ UIImage::UIImage() {
 
 UIImage::~UIImage() {}
 
-void UIImage::Render(Bounds2Di Bounds, Vector2i Screensize) {
+void UIImage::Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) {
+	// todo: needs to work correctly with clipping bounds
 	if (IsDirty()) {
 		Bounds2Di UsedBounds = Bounds;
 
@@ -69,7 +70,7 @@ void UIImage::Initialize() {
 
 	SFSharedRef<Shader> VertShader = GetRoot()->GetRenderPipeline().GetShader("Shaders/UI/Vert.hlsl", ShaderType::Vertex);
 	SFSharedRef<Shader> FragShader = GetRoot()->GetRenderPipeline().GetShader("Shaders/UI/Frag.hlsl", ShaderType::Fragment);
-	SFSharedRef<Texture2D> Texture = GetRoot()->GetRenderPipeline().GetTexture2D("C:\\Users\\Rune_\\Desktop\\Screenshot 2024-12-22 210315.jpg");
+	SFSharedRef<Texture2D> Texture = GetRoot()->GetRenderPipeline().GetTexture2D("Test Assets/Bug/BBug_Texture.png");
 
 	material->BindShaders({ VertShader, FragShader });
 	material->Textures.push_back(Texture);

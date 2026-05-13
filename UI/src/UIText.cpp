@@ -100,7 +100,8 @@ size_t UIText::CountLines(const std::wstring& str) const {
 	return lines;
 }
 
-void UIText::Render(Bounds2Di Bounds, Vector2i Screensize) {
+void UIText::Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) {
+	// todo: needs to work correctly with clipping bounds
 	if (IsDirty()) {
 		SetupVertexBuffer(Bounds, Screensize);
 		ClearDirty();

@@ -35,9 +35,10 @@ protected:
 	SFSharedPtr<Mesh> mesh;
 	SFSharedPtr<Material> material;
 	Bounds2Di LastBounds;
+	Bounds2Di LastClippingBounds;
 	bool VisualElement = false;
 
-	virtual void Render(Bounds2Di Bounds, Vector2i Screensize) = 0;
+	virtual void Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) = 0;
 	virtual void ParentUpdated();
 	virtual void Initialize() {};
 	virtual bool RequiresInput() const { return false; }
@@ -72,4 +73,12 @@ public:
 
 protected:
 	void ClearDirty();
+
+	inline bool IsOutsideClipping(Bounds2Di Bounds, Bounds2Di ClippingBounds) {
+		bool inside = false;
+		inside |= Bounds.Contains(ClippingBounds.position);
+		inside |= Bounds.Contains(ClippingBounds.position + ClippingBounds.size);
+		inside |= ClippingBounds.Contains(Bounds.position);
+		return inside;
+	}
 };

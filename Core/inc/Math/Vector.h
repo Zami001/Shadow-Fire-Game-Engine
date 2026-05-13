@@ -145,6 +145,10 @@ struct Vector : public vec_base<DataType, Dimensions> {
 		return vec;
 	}
 
+	constexpr inline DataType operator[](int index) const noexcept {
+		return base::v[index];
+	}
+
 	constexpr inline double SqrMagnitude() const noexcept {
 		double mag = 0.0;
 		for (int i = 0; i < Dimensions; ++i) {

@@ -27,7 +27,7 @@ public:
 	virtual bool RequiresInput() const override { return true; }
 
 protected:
-	virtual void Render(Bounds2Di Bounds, Vector2i Screensize) override;
+	virtual void Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) override;
 	virtual void Initialize() override;
 	virtual Vector2i GetDesiredSize() const override;
 
