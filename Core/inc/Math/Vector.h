@@ -145,7 +145,11 @@ struct Vector : public vec_base<DataType, Dimensions> {
 		return vec;
 	}
 
-	constexpr inline DataType operator[](int index) const noexcept {
+	constexpr inline DataType& operator[](int index) noexcept {
+		return base::v[index];
+	}
+
+	constexpr inline const DataType& operator[](int index) const noexcept {
 		return base::v[index];
 	}
 

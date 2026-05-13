@@ -79,5 +79,12 @@ int Math_Bounds(int argc, char** const arg) {
 		return 1;
 	}
 
+	Bounds overlap = bounds1.GetOverlappingBounds(bounds2);
+	if (overlap.position != Vector2i(0, 0) || overlap.size != Vector2i(2, 4)) {
+		std::cout << "Overlapping bounds was not correct given the given bounds\n" << "overlap: position - " << overlap.position.ToString() << ", size - " << overlap.size.ToString();
+		PRINT_BOUNDS;
+		return 1;
+	}
+
 	return 0;
 }

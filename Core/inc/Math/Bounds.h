@@ -23,6 +23,7 @@ struct Bounds {
 		return true;
 	}
 
+	// checks if two bounds are overlapping
 	constexpr bool Overlap(const Bounds& other) const {
 		// todo: fairly sure this can be optimised more than this
 		bool valid = true;
@@ -58,6 +59,26 @@ struct Bounds {
 		}
 		
 		return valid;
+	}
+
+	// gets the overlapping area between two bounds. Does not check that bounds are actually overlapping
+	// non overlapping bounds will result in a bounds between the two bounds.
+	constexpr Bounds GetOverlappingBounds(const Bounds& other) {
+		Bounds overlap;
+
+		for (int i = 0; i < Dimensions; ++i) {
+			T min1, min2, max1, max2;
+
+			min1 = size[i] >= 0 ? position[i] : position[i] + size[i];
+			min2 = other.size[i] >= 0 ? other.position[i] : other.position[i] + other.size[i];
+			max1 = size[i] >= 0 ?  position[i] + size[i] : position[i];
+			max2 = other.size[i] >= 0 ? other.position[i] + other.size[i] : other.position[i];
+
+			overlap.position[i] = min1 < min2 ? min1 : min2;
+			overlap.size[i] = (max1 < max2 ? max1 : max2) - overlap.position[i];
+		}
+
+		return overlap;
 	}
 
 	inline Bounds& operator=(const Bounds& other) {
