@@ -87,11 +87,9 @@ InputManager& Window::GetInputManager() {
 	return input;
 }
 
-#ifdef _WIN32
-HWND Window::GetHandle() const {
+Window::WindowHandle Window::GetHandle() const {
 	return handle;
 }
-#endif
 
 void Window::OnResize(Vector2i newSize) {
 	Size = newSize;

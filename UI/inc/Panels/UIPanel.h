@@ -14,6 +14,8 @@ public:
 protected:
 	std::vector<SFSharedRef<UIElement>> Subelements;
 	virtual void ParentUpdated() override;
+	virtual void OnElementAdded(SFSharedRef<UIElement> Element) {}
+
 	void RenderSubelement(SFSharedRef<UIElement>& Element, Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize);
 
 public:
@@ -34,6 +36,7 @@ public:
 		UIElement* baseElement = element;
 		baseElement->Initialize();
 		MarkDirty();
+		OnElementAdded(element);
 		return element;
 	}
 

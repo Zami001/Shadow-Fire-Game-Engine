@@ -21,7 +21,8 @@ protected:
 	virtual void Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize);
 
 private:
-	SplitDirection Split;
+	SplitDirection Split = Horizontal;
+	std::vector<float> SplitAmounts;
 
 public:
 	void SetSplitDirection(SplitDirection NewDirection);

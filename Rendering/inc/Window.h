@@ -45,8 +45,10 @@ public:
 	InputManager& GetInputManager();
 
 #ifdef _WIN32
-	HWND GetHandle() const;
+	typedef HWND WindowHandle;
 #endif
+
+	WindowHandle GetHandle() const;
 
 protected:
 	virtual void OnResize(Vector2i newSize);
@@ -54,20 +56,20 @@ protected:
 	bool VSync;
 
 private:
-	static std::unordered_map<HWND, Window*> Windows;
+	static std::unordered_map<WindowHandle, Window*> Windows;
 
 	RenderTarget* target;
 	WindowInput input;
 
 	Vector2i Size;
 	std::string Title;
+	WindowHandle handle;
 
 #ifdef _WIN32
 	WNDCLASS windowClass;
-	HWND handle;
 	bool Closing = false;
-#endif
 
 	static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static Keycode TranslateKeycode(WPARAM wParam, LPARAM lParam);
+#endif
 };

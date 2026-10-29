@@ -4,5 +4,9 @@
 
 class UI_API OverlayPanel : public UIPanel {
 public:
-	//virtual void Render(std::vector<RenderedUI>& UI);
+	OverlayPanel() = default;
+	~OverlayPanel() = default;
+
+protected:
+	virtual void Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) override;
 };

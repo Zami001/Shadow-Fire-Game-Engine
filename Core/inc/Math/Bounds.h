@@ -86,12 +86,6 @@ struct Bounds {
 		size = other.size;
 		return *this;
 	}
-
-private:
-	constexpr bool ExtractBit(unsigned long long val, int index) const {
-		unsigned long long mask = 1 << index;
-		return mask & val;
-	}
 };
 
 typedef Bounds<int, 2> Bounds2Di;

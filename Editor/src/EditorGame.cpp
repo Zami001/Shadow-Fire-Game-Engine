@@ -107,7 +107,7 @@ void EditorGame::CreateInitialScene() {
 	//	
 	//	
 	//	meshcomp->transform.Rotate(Quaternion(Vector3(0, deltatime, 0)));
-	//
+	//	
 	//	target.Meshes[0]->GetSkeleton()->GenerateDebugMesh(debugMesh->GetVertexBuffer());
 	//	target.Meshes[0]->GetSkeleton()->GenerateAnimatedDebugMesh(debugMesh->GetVertexBuffer(), timer);
 	//	meshcomp->transform.Rotate({ 0, Math::TAU * 100, 0 });
@@ -132,10 +132,11 @@ void EditorGame::CreateInitialScene() {
 	audioComp->LoadAudio("Test assets\\Bloop.wav");
 	audioComp->SetLooping(true);
 
-	GetGameInstance()->GetWindows()[0]->GetInputManager().OnButtonEvent.Add([audioComp](Keycode Key, ButtonState State) mutable {
+	GetGameInstance()->GetPrimaryWindow()->GetInputManager().OnButtonEvent.Add([audioComp, game = GetGameInstance()](Keycode Key, ButtonState State) mutable {
 		if (Key == Keycode::Space && State == ButtonState::Down) {
 			//Tone.SetFrequency((Random::GetInt64() % 1000) + 100);
-			audioComp->PlayAudio();
+			//audioComp->PlayAudio();
+			game->GetCursor().SetCursorStyle(static_cast<CursorStyle>((static_cast<int>(game->GetCursor().GetCursorStyle()) + 1) % 17));
 		}
 	});
 }

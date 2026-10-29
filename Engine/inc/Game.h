@@ -6,6 +6,7 @@
 #include <TickManager.h>
 #include <MinimalCore.h>
 #include <AudioEngine.h>
+#include <Cursor.h>
 
 class ENGINE_API Game : public SFObject {
 protected:
@@ -33,10 +34,12 @@ private:
 	std::vector<SFSharedRef<Scene>> Scenes;
 	std::vector<SFSharedPtr<Window>> Windows;
 	AudioEngine audioEngine;
+	Cursor cursor;
 
 public:
 	inline TickManager& GetTickManager() { return tickManager; }
 	inline const std::vector<SFSharedRef<Scene>>& GetScenes() { return Scenes; }
 	inline AudioEngine& GetAudioEngine() { return audioEngine; }
 	inline SFSharedPtr<Window> GetPrimaryWindow() { return Windows[0]; }
+	inline Cursor& GetCursor() { return cursor; }
 };

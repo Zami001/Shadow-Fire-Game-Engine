@@ -17,6 +17,10 @@ void ResizablePanel::Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i
 }
 
 void ResizablePanel::SetSplitDirection(SplitDirection NewDirection) {
+	if (NewDirection == Split) {
+		return;
+	}
+
 	Split = NewDirection;
 	MarkDirty();
 }

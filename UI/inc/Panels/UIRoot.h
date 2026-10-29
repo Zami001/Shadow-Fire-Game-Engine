@@ -15,6 +15,8 @@ public:
 	virtual Vector2i GetDesiredSize() const override;
 
 	inline RenderPipeline& GetRenderPipeline() const { return pipeline; }
+	void RenderUI(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize);
 
+protected:
 	virtual void Render(Bounds2Di Bounds, Bounds2Di ClippingBounds, Vector2i Screensize) override;
 };
